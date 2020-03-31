@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
-* Студент: [Наталья Самбурова](https://up.htmlacademy.ru/ecmascript/11/user/13939).
-* Наставник: `Неизвестно`.
+* Студент: [Наталья Самбурова](https://htmlacademy.ru/profile/id13939).
+* Наставник: [Артём Рудов](https://htmlacademy.ru/profile/id345377).
 
 ---
 
