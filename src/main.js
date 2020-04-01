@@ -239,9 +239,7 @@ const createFormEdit = () => (
   </form>`
 );
 
-const createDayList = () => (
-  `<ul class="trip-days"></ul>`
-);
+const createDayList = () => `<ul class="trip-days"></ul>`;
 
 const createDayItem = () => (
   `<li class="trip-days__item  day">
