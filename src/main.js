@@ -1,5 +1,3 @@
-'use strict';
-
 const POINT_AMOUNT = 3;
 
 const Place = {
