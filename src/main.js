@@ -1,3 +1,4 @@
+import {POINT_AMOUNT, Place} from './common/consts.js';
 import {createTripInfo} from './components/trip-info.js';
 import {createTripPrice} from './components/trip-price.js';
 import {createMenu} from './components/menu.js';
@@ -7,14 +8,6 @@ import {createFormEdit} from './components/form-edit.js';
 import {createDayList} from './components/day-list.js';
 import {createDayItem} from './components/day.js';
 import {createEventItem} from './components/event.js';
-
-const POINT_AMOUNT = 3;
-
-const Place = {
-  BEFOREEND: `beforeend`,
-  AFTERBEGIN: `afterbegin`,
-  AFTEREND: `afterend`
-};
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
