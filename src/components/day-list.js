@@ -1,1 +1,5 @@
-export const createDayList = () => `<ul class="trip-days"></ul>`;
+import {createDayItem} from "./day-item";
+
+const createDayList = () => `<ul class="trip-days">${createDayItem()}</ul>`;
+
+export {createDayList};
