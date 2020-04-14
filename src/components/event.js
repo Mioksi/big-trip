@@ -62,4 +62,4 @@ const createEventItem = (event) => {
   );
 };
 
-export {createEventItem};
+export {getEventInfo, createEventItem};

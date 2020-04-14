@@ -6,6 +6,7 @@ import {createSorting} from './components/sorting';
 import {createFormEdit} from './components/form-edit';
 import {createDayList} from './components/day-list';
 import {render} from './common/utils';
+import {events} from "./components/day-item";
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
@@ -19,7 +20,7 @@ const init = () => {
   render(firstTitle, createMenu(), Place.AFTEREND);
   render(secondTitle, createFilters(), Place.AFTEREND);
   render(tripEvents, createSorting());
-  render(tripEvents, createFormEdit());
+  render(tripEvents, createFormEdit(events[0]));
   render(tripEvents, createDayList());
 };
 

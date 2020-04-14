@@ -1,9 +1,10 @@
-import {getBoolean, getRandomNumber, getRandomDate} from '../common/utils';
-import {Price, Photos, MAX_OFFERS, MAX_DESCRIPTIONS} from '../common/consts';
+import {getBoolean, shuffleArray, getRandomNumber, getRandomDate} from '../common/utils';
+import {Price, Description, Photos, MAX_OFFERS} from '../common/consts';
 
-const EVENT_TYPES = [
-  `Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`
-];
+const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
+const EVENT_TYPES_IN = [`check-in`, `sightseeing`, `restaurant`];
+
+const EVENT_TYPES = [...EVENT_TYPES_IN, ...EVENT_TYPES_TO];
 
 const DESTINATIONS = [`Amsterdam`, `Chamonix`, `Geneva`, `Moscow`, `Saint Petersburg`, `Canberra`];
 
@@ -36,16 +37,16 @@ const eventOffers = [
 ];
 
 const eventPlaceholder = {
-  'Taxi': `Taxi to `,
-  'Bus': `Bus to `,
-  'Train': `Train to `,
-  'Ship': `Ship to `,
-  'Transport': `Transport to `,
-  'Drive': `Drive to `,
-  'Flight': `Flight to `,
-  'Check-in': `Check-in in `,
-  'Sightseeing': `Sightseeing in `,
-  'Restaurant': `Restaurant in `
+  'taxi': `Taxi to `,
+  'bus': `Bus to `,
+  'train': `Train to `,
+  'ship': `Ship to `,
+  'transport': `Transport to `,
+  'drive': `Drive to `,
+  'flight': `Flight to `,
+  'check-in': `Check-in in `,
+  'sightseeing': `Sightseeing in `,
+  'restaurant': `Restaurant in `
 };
 
 const DESCRIPTIONS = [
@@ -70,7 +71,18 @@ const getPhotos = () => {
 
 const generateOffers = () => eventOffers.filter(() => getBoolean()).slice(0, MAX_OFFERS);
 
-const getDescriptions = () => DESCRIPTIONS.filter(() => getBoolean()).slice(0, MAX_DESCRIPTIONS).join(` `);
+const getDescriptions = () => shuffleArray(DESCRIPTIONS).slice(0, getRandomNumber(Description.MAX, Description.MIN)).join(` `);
+
+const generateOffer = () => eventOffers.map((offer) => {
+  const {type, name, price} = offer;
+
+  return {
+    type,
+    name,
+    price,
+    isChecked: getBoolean()
+  };
+});
 
 const generateTripEvent = () => {
   return {
@@ -87,4 +99,4 @@ const generateTripEvent = () => {
 
 const generateTripEvents = (count) => new Array(count).fill(``).map(generateTripEvent);
 
-export {eventPlaceholder, generateTripEvents};
+export {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS, eventPlaceholder, generateTripEvents, generateOffer};

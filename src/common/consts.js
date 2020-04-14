@@ -4,7 +4,6 @@ export const MAX_HOURS = 23;
 export const MAX_MINUTES = 59;
 export const MAX_DAYS = 14;
 export const MAX_OFFERS = 5;
-export const MAX_DESCRIPTIONS = 5;
 export const EVENTS_AMOUNT = 20;
 export const MAX_DATE_SYMBOLS = 16;
 export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
@@ -21,6 +20,10 @@ export const Sign = {
 export const Price = {
   MIN: 1,
   MAX: 1000
+};
+export const Description = {
+  MIN: 1,
+  MAX: 5
 };
 export const Photos = {
   MIN: 1,
