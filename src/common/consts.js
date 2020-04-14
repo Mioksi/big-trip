@@ -1,12 +1,13 @@
+export const EVENTS_AMOUNT = 20;
 export const HOURS_FORMAT = 24;
 export const MAX_HOURS_RANGE = 10;
 export const MAX_HOURS = 23;
 export const MAX_MINUTES = 59;
 export const MAX_DAYS = 14;
 export const MAX_OFFERS = 5;
-export const EVENTS_AMOUNT = 20;
 export const MAX_DATE_SYMBOLS = 16;
 export const TIME_OFFSET = 60000;
+export const MAX_DESTINATIONS = 3;
 
 export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];

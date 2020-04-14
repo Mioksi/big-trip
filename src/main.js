@@ -1,8 +1,8 @@
 import {Place} from './common/consts';
-import {createTripInfo} from './components/trip-info';
-import {createMenu} from './components/menu';
-import {createFilters} from './components/filter';
-import {createSorting} from './components/sorting';
+import {createTripInfo} from './components/header/trip-info';
+import {createMenu} from './components/header/menu';
+import {createFilters} from './components/header/filter';
+import {createSorting} from './components/header/sorting';
 import {createFormEdit} from './components/event/event-edit';
 import {createDayList} from './components/day/day-list';
 import {render} from './common/utils';
@@ -16,7 +16,7 @@ const tripEvents = document.querySelector(`.trip-events`);
 const [firstTitle, secondTitle] = tripControlsHeaders;
 
 const init = () => {
-  render(tripMain, createTripInfo(), Place.AFTERBEGIN);
+  render(tripMain, createTripInfo(events), Place.AFTERBEGIN);
   render(firstTitle, createMenu(), Place.AFTEREND);
   render(secondTitle, createFilters(), Place.AFTEREND);
   render(tripEvents, createSorting());
