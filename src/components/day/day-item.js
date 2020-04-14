@@ -5,6 +5,8 @@ import {createEventList} from '../event/event-list';
 
 const events = generateTripEvents(EVENTS_AMOUNT);
 
+events.sort((first, second) => first.startTime - second.startTime);
+
 const createDayItem = () => (
   `<li class="trip-days__item  day">
     ${createDayInfo()}
