@@ -1,32 +1,5 @@
-import {eventPlaceholder} from '../mock/event';
-import {formatTime} from '../common/utils';
-import {MAX_DATE_SYMBOLS} from '../common/consts';
 import {createOffers} from './event-offers';
-
-const TIME_OFFSET = 60000;
-
-const getEventTime = (time) => {
-  return formatTime(time);
-};
-
-const getEventDate = (date) => {
-  const offset = date.getTimezoneOffset() * TIME_OFFSET;
-  const targetDate = new Date(date - offset);
-
-  return targetDate.toISOString().substr(0, MAX_DATE_SYMBOLS);
-};
-
-const getEventInfo = (event) => {
-  const {type, startTime, endTime} = event;
-
-  const eventType = eventPlaceholder[type];
-  const start = getEventTime(startTime);
-  const end = getEventTime(endTime);
-  const startDate = getEventDate(startTime);
-  const endDate = getEventDate(endTime);
-
-  return [eventType, start, end, startDate, endDate];
-};
+import {getEventInfo} from './common/event-info';
 
 const createEventItem = (event) => {
   const {type, city, price, offers} = event;
@@ -52,7 +25,7 @@ const createEventItem = (event) => {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${createOffers(offers)}
+            ${createOffers(offers)}
         </ul>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
@@ -62,4 +35,4 @@ const createEventItem = (event) => {
   );
 };
 
-export {getEventInfo, createEventItem};
+export {createEventItem};

@@ -3,10 +3,10 @@ import {createTripInfo} from './components/trip-info';
 import {createMenu} from './components/menu';
 import {createFilters} from './components/filter';
 import {createSorting} from './components/sorting';
-import {createFormEdit} from './components/form-edit';
-import {createDayList} from './components/day-list';
+import {createFormEdit} from './components/event/event-edit';
+import {createDayList} from './components/day/day-list';
 import {render} from './common/utils';
-import {events} from "./components/day-item";
+import {events} from './components/day/day-item';
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);

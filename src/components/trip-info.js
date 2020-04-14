@@ -1,4 +1,4 @@
-import {createTripPrice} from "./trip-price";
+import {createTripPrice} from './trip-price';
 
 const createTripInfo = () => (
   `<section class="trip-main__trip-info  trip-info">

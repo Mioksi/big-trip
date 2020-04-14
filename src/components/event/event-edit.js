@@ -1,6 +1,6 @@
-import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../mock/event';
-import {getFullDate} from '../common/utils';
-import {getEventInfo} from './event';
+import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../../common/consts';
+import {getFullDate} from '../../common/utils';
+import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './event-types';
 import {createOptions} from './event-options';
 import {createOffers} from './event-selectors';
@@ -37,7 +37,12 @@ const createFormEdit = (event) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${eventType}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1"
+            type="text"
+            name="event-destination"
+            value="${city}"
+            list="destination-list-1"
+          >
           <datalist id="destination-list-1">
             ${createOptions(DESTINATIONS)}
           </datalist>
@@ -46,19 +51,32 @@ const createFormEdit = (event) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startFullDate} ${start}">
+          <input class="event__input  event__input--time" id="event-start-time-1"
+            type="text"
+            name="event-start-time"
+            value="${startFullDate} ${start}"
+          >
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endFullDate} ${end}">
+          <input class="event__input  event__input--time"
+            id="event-end-time-1"
+            type="text"
+            name="event-end-time"
+            value="${endFullDate} ${end}"
+          >
         </div>
         <div class="event__field-group  event__field-group--price">
           <label class="event__label" for="event-price-1">
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-1"
+            type="text"
+            name="event-price"
+            value="${price}"
+          >
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>

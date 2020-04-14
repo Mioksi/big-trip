@@ -1,4 +1,4 @@
-import {generateOffer} from '../mock/event';
+import {generateOffer} from '../../mock/offer';
 
 const offers = generateOffer();
 
@@ -9,7 +9,12 @@ const createOffer = (offer) => {
 
   return (
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-${type}" ${getCheckedFilter(isChecked)}>
+      <input class="event__offer-checkbox  visually-hidden"
+        id="event-offer-luggage-1"
+        type="checkbox"
+        name="event-offer-${type}"
+        ${getCheckedFilter(isChecked)}
+       >
       <label class="event__offer-label" for="event-offer-${type}-1">
         <span class="event__offer-title">${name}</span>
         &plus;

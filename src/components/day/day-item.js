@@ -1,7 +1,7 @@
-import {EVENTS_AMOUNT} from '../common/consts';
-import {generateTripEvents} from "../mock/event";
+import {EVENTS_AMOUNT} from '../../common/consts';
+import {generateTripEvents} from "../../mock/event";
 import {createDayInfo} from './day-info';
-import {createEventList} from './event-list';
+import {createEventList} from '../event/event-list';
 
 const events = generateTripEvents(EVENTS_AMOUNT);
 

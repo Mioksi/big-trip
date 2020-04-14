@@ -1,4 +1,4 @@
-import {createEventItem} from "./event";
+import {createEventItem} from './event';
 
 const createEventList = (events) => events.reduce((result, event) => {
   result += createEventItem(event);

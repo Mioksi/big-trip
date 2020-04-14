@@ -22,9 +22,7 @@ export const render = (container, template, place = Place.BEFOREEND) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const castTimeFormat = (value) => {
-  return value < MAX_HOURS_RANGE ? `0${value}` : String(value);
-};
+const castTimeFormat = (value) => value < MAX_HOURS_RANGE ? `0${value}` : String(value);
 
 export const formatTime = (date) => {
   const hours = castTimeFormat(date.getHours() % HOURS_FORMAT);
@@ -57,6 +55,4 @@ export const getRandomDate = (startDate, endDate) => {
   return new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
 };
 
-export const getFullDate = (date) => {
-  return formatDate(date);
-};
+export const getFullDate = (date) => formatDate(date);
