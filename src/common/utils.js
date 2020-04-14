@@ -41,7 +41,7 @@ export const formatDate = (date) => {
   return `${day}/${month}/${year.substr(-2)}`;
 };
 
-export const getRandomDate = () => {
+export const getNewDate = () => {
   const targetDate = new Date();
   const sign = getBoolean() ? Sign.POSITIVE : Sign.NEGATIVE;
   const diffValue = sign * getRandomNumber(MAX_DAYS);
@@ -51,6 +51,10 @@ export const getRandomDate = () => {
   targetDate.setMinutes(targetDate.getMinutes() + getRandomNumber(MAX_MINUTES));
 
   return targetDate;
+};
+
+export const getRandomDate = (startDate, endDate) => {
+  return new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
 };
 
 export const getFullDate = (date) => {

@@ -1,4 +1,4 @@
-import {getBoolean, shuffleArray, getRandomNumber, getRandomDate} from '../common/utils';
+import {getBoolean, shuffleArray, getRandomNumber, getNewDate, getRandomDate} from '../common/utils';
 import {Price, Description, Photos, MAX_OFFERS} from '../common/consts';
 
 const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
@@ -61,6 +61,8 @@ const DESCRIPTIONS = [
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
 
+const date = [2020, 4, 1];
+
 const getPhotoLink = () => `http://picsum.photos/248/152?r=${Math.random()}`;
 
 const getPhotos = () => {
@@ -85,10 +87,13 @@ const generateOffer = () => eventOffers.map((offer) => {
 });
 
 const generateTripEvent = () => {
+  const startTime = getNewDate();
+  const endTime = getRandomDate(startTime, new Date(...date));
+
   return {
     type: EVENT_TYPES[getRandomNumber(EVENT_TYPES.length)],
-    startTime: getRandomDate(),
-    endTime: getRandomDate(),
+    startTime,
+    endTime,
     city: DESTINATIONS[getRandomNumber(DESTINATIONS.length)],
     description: getDescriptions(),
     price: getRandomNumber(Price.MIN, Price.MAX),
