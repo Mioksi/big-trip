@@ -1,4 +1,4 @@
-import {Place, Sign, MAX_HOURS_RANGE, HOURS_FORMAT, MAX_DAYS, MAX_HOURS, MAX_MINUTES} from './consts';
+import {Place, Sign, MAX_HOURS_RANGE, HOURS_FORMAT, MAX_DAYS, MAX_HOURS, MAX_MINUTES, TIME_OFFSET} from './consts';
 
 export const getRandomNumber = (max, min = 0) => {
   return min + Math.floor(Math.random() * (max - min));
@@ -56,3 +56,10 @@ export const getRandomDate = (startDate, endDate) => {
 };
 
 export const getFullDate = (date) => formatDate(date);
+
+export const getIsoDate = (date) => {
+  const offset = date.getTimezoneOffset() * TIME_OFFSET;
+  const targetDate = new Date(date - offset);
+
+  return targetDate.toISOString();
+};

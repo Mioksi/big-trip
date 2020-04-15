@@ -1,19 +1,22 @@
-import {EVENTS_AMOUNT} from '../../common/consts';
-import {generateTripEvents} from "../../mock/event";
-import {createDayInfo} from './day-info';
-import {createEventList} from '../event/event-list';
+import {MONTHS} from '../../common/consts';
+import {getIsoDate} from '../../common/utils';
 
-const events = generateTripEvents(EVENTS_AMOUNT);
+const createDayItem = (day, index) => {
+  const date = new Date(day);
+  const dateValue = getIsoDate(date);
+  const dateTitle = `${MONTHS[date.getMonth()]} ${date.getDate()}`;
 
-events.sort((first, second) => first.startTime - second.startTime);
+  return (
+    `<li class="trip-days__item  day">
+      <div class="day__info">
+        <span class="day__counter">${index + 1}</span>
+        <time class="day__date" datetime="${dateValue.substr(0, 10)}">${dateTitle}</time>
+      </div>
+      <ul class="trip-events__list"></ul>
+    </li>`
+  );
+};
 
-const createDayItem = () => (
-  `<li class="trip-days__item  day">
-    ${createDayInfo()}
-    <ul class="trip-events__list">
-    ${createEventList(events.slice(1))}
-    </ul>
-  </li>`
-);
+const createDayItems = (dates) => dates.map(createDayItem).join(``);
 
-export {events, createDayItem};
+export {createDayItems};

@@ -6,7 +6,8 @@ import {createSorting} from './components/header/sorting';
 import {createFormEdit} from './components/event/event-edit';
 import {createDayList} from './components/day/day-list';
 import {render} from './common/utils';
-import {events} from './components/day/day-item';
+import {events} from './components/day/day-list';
+import {createEventItem} from './components/event/event-item';
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
@@ -22,6 +23,21 @@ const init = () => {
   render(tripEvents, createSorting());
   render(tripEvents, createFormEdit(events[0]));
   render(tripEvents, createDayList());
+
+  const days = document.querySelectorAll(`.day`);
+
+  days.forEach((day) => {
+    const dayDateElement = day.querySelector(`.day__date`);
+    const dateTime = new Date(dayDateElement.dateTime);
+
+    const trips = day.querySelector(`.trip-events__list`);
+
+    for (let event of events) {
+      if (event.startTime.getDate() === dateTime.getDate()) {
+        render(trips, createEventItem(event));
+      }
+    }
+  });
 };
 
 init();

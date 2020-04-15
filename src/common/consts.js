@@ -5,7 +5,6 @@ export const MAX_HOURS = 23;
 export const MAX_MINUTES = 59;
 export const MAX_DAYS = 14;
 export const MAX_OFFERS = 5;
-export const MAX_DATE_SYMBOLS = 16;
 export const TIME_OFFSET = 60000;
 export const MAX_DESTINATIONS = 3;
 

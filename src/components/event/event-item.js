@@ -14,9 +14,9 @@ const createEventItem = (event) => {
         <h3 class="event__title">${eventType} ${city}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startDate}">${start}</time>
+            <time class="event__start-time" datetime="${startDate.substr(0, 16)}">${start}</time>
             &mdash;
-            <time class="event__end-time" datetime="${endDate}">${end}</time>
+            <time class="event__end-time" datetime="${endDate.substr(0, 16)}">${end}</time>
           </p>
           <p class="event__duration">30M</p>
         </div>
