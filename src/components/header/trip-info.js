@@ -28,7 +28,7 @@ const createTripInfo = (events) => {
         <h1 class="trip-info__title">${title}</h1>
         <p class="trip-info__dates">${date}</p>
       </div>
-      ${createTripPrice()}
+      ${createTripPrice(events)}
     </section>`
   );
 };
