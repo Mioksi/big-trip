@@ -1,5 +1,5 @@
-import {formatTime, getIsoDate} from '../../../common/utils';
-import {eventPlaceholder} from '../../../mock/event';
+import {formatTime, getIsoDate} from '../../../../common/utils';
+import {eventPlaceholder} from '../../../../mock/event';
 
 const getEventTime = (time) => formatTime(time);
 

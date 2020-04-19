@@ -18,10 +18,6 @@ export const shuffleArray = function (array) {
   return array;
 };
 
-export const render = (container, template, place = Place.BEFOREEND) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 const castTimeFormat = (value) => value < MAX_HOURS_RANGE ? `0${value}` : String(value);
 
 export const formatTime = (date) => {
@@ -62,4 +58,25 @@ export const getIsoDate = (date) => {
   const targetDate = new Date(date - offset);
 
   return targetDate.toISOString();
+};
+
+export const render = (container, element, place = Place.BEFOREEND) => {
+  switch (place) {
+    case Place.BEFOREEND:
+      container.append(element);
+      break;
+    case Place.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case Place.AFTEREND:
+      container.after(element);
+      break;
+  }
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
 };
