@@ -1,6 +1,6 @@
 import {getTripRoute, getTripDate} from '../utils/utils';
 
-const createTripInfoMain = (events) => {
+const createTripInfoMainMarkup = (events) => {
   const title = getTripRoute(events);
   const date = getTripDate(events);
 
@@ -11,5 +11,7 @@ const createTripInfoMain = (events) => {
      </div>`
   );
 };
+
+const createTripInfoMain = (events) => events.length > 0 ? createTripInfoMainMarkup(events) : ``;
 
 export {createTripInfoMain};
