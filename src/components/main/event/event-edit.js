@@ -1,12 +1,12 @@
-import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../../common/consts';
-import {getFullDate} from '../../common/utils';
+import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../../../common/consts';
+import {createElement, getFullDate} from '../../../common/utils';
 import {getEventInfo} from './common/event-info';
-import {createTransferItems, createActivityItems} from './event-types';
-import {createOptions} from './event-options';
-import {createOffers} from './event-selectors';
-import {createPhotos} from './event-photos';
+import {createTransferItems, createActivityItems} from './components/event-types';
+import {createOptions} from './components/event-options';
+import {createOffers} from './components/event-selectors';
+import {createPhotos} from './components/event-photos';
 
-const createFormEdit = (event) => {
+const createEventEdit = (event) => {
   const {type, city, startTime, endTime, price, description, photos} = event;
   const [eventType, start, end] = getEventInfo(event);
 
@@ -102,4 +102,25 @@ const createFormEdit = (event) => {
   );
 };
 
-export {createFormEdit};
+export default class EventEdit {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventEdit(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

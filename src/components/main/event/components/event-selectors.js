@@ -1,4 +1,4 @@
-import {generateOffer} from '../../mock/offer';
+import {generateOffer} from '../../../../mock/offer';
 
 const offers = generateOffer();
 

@@ -1,5 +1,6 @@
-import {createOffers} from './event-offers';
+import {createOffers} from './components/event-offers';
 import {getEventInfo} from './common/event-info';
+import {createElement} from '../../../common/utils';
 
 const createEventItem = (event) => {
   const {type, city, price, offers} = event;
@@ -35,4 +36,25 @@ const createEventItem = (event) => {
   );
 };
 
-export {createEventItem};
+export default class EventItem {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventItem(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
