@@ -25,6 +25,8 @@ export const DESCRIPTIONS = [
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
 
+export const ESC_KEY = `Escape`;
+
 export const Place = {
   BEFOREEND: `beforeend`,
   AFTERBEGIN: `afterbegin`,

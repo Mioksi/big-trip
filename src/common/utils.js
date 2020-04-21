@@ -1,4 +1,20 @@
-import {Place, Sign, MAX_HOURS_RANGE, HOURS_FORMAT, MAX_DAYS, MAX_HOURS, MAX_MINUTES, TIME_OFFSET} from './consts';
+import {
+  Place,
+  Sign,
+  MAX_HOURS_RANGE,
+  HOURS_FORMAT,
+  MAX_DAYS,
+  MAX_HOURS,
+  MAX_MINUTES,
+  TIME_OFFSET,
+  ESC_KEY
+} from './consts';
+
+export const isEscEvent = function (evt, action) {
+  if (evt.key === ESC_KEY) {
+    action();
+  }
+};
 
 export const getRandomNumber = (max, min = 0) => {
   return min + Math.floor(Math.random() * (max - min));

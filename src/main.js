@@ -8,6 +8,7 @@ import MenuComponent from './components/header/menu/menu';
 import FiltersComponent from './components/header/filters/filters';
 import SortingComponent from './components/main/sorting/sorting';
 import DayListComponent from './components/main/day/day-list';
+import NoEventsComponent from './components/main/event/components/no-events';
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
@@ -22,15 +23,24 @@ events.sort((first, second) => first.startTime - second.startTime);
 
 const allDays = getTripDays(events);
 
+const renderEvents = (dayListComponent) => {
+  if (events.length === 0) {
+    render(tripEvents, new NoEventsComponent().getElement());
+    return;
+  }
+
+  render(tripEvents, new SortingComponent().getElement());
+  render(tripEvents, dayListComponent);
+  renderDays(dayListComponent, allDays, events);
+};
+
 const init = () => {
   const dayListComponent = new DayListComponent().getElement();
 
   render(tripMain, new TripInfoComponent(events).getElement(), Place.AFTERBEGIN);
   render(firstTitle, new MenuComponent().getElement(), Place.AFTEREND);
   render(secondTitle, new FiltersComponent().getElement(), Place.AFTEREND);
-  render(tripEvents, new SortingComponent().getElement());
-  render(tripEvents, dayListComponent);
-  renderDays(dayListComponent, allDays, events);
+  renderEvents(dayListComponent);
 };
 
 init();

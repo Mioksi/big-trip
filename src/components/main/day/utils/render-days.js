@@ -6,7 +6,7 @@ const renderDays = (container, allDays, events) => {
 
   const days = container.querySelectorAll(`.day`);
 
-  days.forEach((day) => {
+  const getDayItem = (day) => {
     const dayDate = day.querySelector(`.day__date`);
     const dateTime = new Date(dayDate.dateTime);
 
@@ -17,7 +17,9 @@ const renderDays = (container, allDays, events) => {
         renderEvent(eventList, event);
       }
     }
-  });
+  };
+
+  days.forEach(getDayItem);
 };
 
 export {renderDays};

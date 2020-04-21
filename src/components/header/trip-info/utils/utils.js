@@ -17,9 +17,7 @@ export const getTripDate = (events) => {
   return `${MONTHS[startDate.getMonth()]} ${startDate.getDate()} &nbsp;&mdash;&nbsp; ${endDate.getDate()} ${MONTHS[endDate.getMonth()]}`;
 };
 
-export const calculateOffersPrice = (offers) => {
-  return offers ? offers.reduce((total, offer) => total + offer.price, 0) : 0;
-};
+export const calculateOffersPrice = (offers) => offers.reduce((total, offer) => total + offer.price, 0);
 
 export const calculateEventsPrice = (events) => {
   return events.reduce((total, event) => total + event.price + calculateOffersPrice(event.offers), 0);
