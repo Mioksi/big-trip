@@ -1,5 +1,5 @@
 import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../../../common/consts';
-import {getFullDate} from '../../../common/utils';
+import {getFullDate} from '../../../common/utils/helpers';
 import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './components/event-types';
 import {createOptions} from './components/event-options';

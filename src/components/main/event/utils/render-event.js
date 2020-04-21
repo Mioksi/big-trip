@@ -1,6 +1,7 @@
 import EventItemComponent from '../event-item';
 import EventEditComponent from '../event-edit';
-import {render, isEscEvent} from '../../../../common/utils';
+import {isEscEvent} from '../../../../common/utils/helpers';
+import {render, replace} from '../../../../common/utils/render';
 
 const renderEvent = (container, event) => {
   const eventItemComponent = new EventItemComponent(event);
@@ -10,11 +11,11 @@ const renderEvent = (container, event) => {
   const buttonSave = eventEditComponent.getElement().querySelector(`.event__save-btn`);
 
   const replaceEventToEdit = () => {
-    container.replaceChild(eventEditComponent.getElement(), eventItemComponent.getElement());
+    replace(eventEditComponent, eventItemComponent);
   };
 
   const replaceEditToEvent = () => {
-    container.replaceChild(eventItemComponent.getElement(), eventEditComponent.getElement());
+    replace(eventItemComponent, eventEditComponent);
   };
 
   const onFormEscPress = (evt) => {
@@ -40,7 +41,7 @@ const renderEvent = (container, event) => {
   rollupButton.addEventListener(`click`, onRollupButtonClick);
   buttonSave.addEventListener(`click`, onFormSave);
 
-  render(container, eventItemComponent.getElement());
+  render(container, eventItemComponent);
 };
 
 export {renderEvent};

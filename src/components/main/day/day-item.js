@@ -1,5 +1,5 @@
 import {MONTHS} from '../../../common/consts';
-import {getIsoDate} from '../../../common/utils';
+import {getIsoDate} from '../../../common/utils/helpers';
 import AbstractComponent from '../../abstract-component';
 
 const createDayItem = (day, index) => {

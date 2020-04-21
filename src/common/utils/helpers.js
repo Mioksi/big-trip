@@ -1,14 +1,4 @@
-import {
-  Place,
-  Sign,
-  MAX_HOURS_RANGE,
-  HOURS_FORMAT,
-  MAX_DAYS,
-  MAX_HOURS,
-  MAX_MINUTES,
-  TIME_OFFSET,
-  ESC_KEY
-} from './consts';
+import {Sign, MAX_HOURS_RANGE, HOURS_FORMAT, MAX_DAYS, MAX_HOURS, MAX_MINUTES, TIME_OFFSET, ESC_KEY} from '../consts';
 
 export const isEscEvent = function (evt, action) {
   if (evt.key === ESC_KEY) {
@@ -74,25 +64,4 @@ export const getIsoDate = (date) => {
   const targetDate = new Date(date - offset);
 
   return targetDate.toISOString();
-};
-
-export const render = (container, element, place = Place.BEFOREEND) => {
-  switch (place) {
-    case Place.BEFOREEND:
-      container.append(element);
-      break;
-    case Place.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case Place.AFTEREND:
-      container.after(element);
-      break;
-  }
-};
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
 };
