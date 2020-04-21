@@ -5,10 +5,7 @@ import {render, replace} from '../../../../common/utils/render';
 
 const renderEvent = (container, event) => {
   const eventItemComponent = new EventItemComponent(event);
-  const rollupButton = eventItemComponent.getElement().querySelector(`.event__rollup-btn`);
-
   const eventEditComponent = new EventEditComponent(event);
-  const buttonSave = eventEditComponent.getElement().querySelector(`.event__save-btn`);
 
   const replaceEventToEdit = () => {
     replace(eventEditComponent, eventItemComponent);
@@ -38,8 +35,8 @@ const renderEvent = (container, event) => {
     document.removeEventListener(`keydown`, onFormEscPress);
   };
 
-  rollupButton.addEventListener(`click`, onRollupButtonClick);
-  buttonSave.addEventListener(`click`, onFormSave);
+  eventItemComponent.setRollupButtonClickHandler(onRollupButtonClick);
+  eventEditComponent.setSubmitHandler(onFormSave);
 
   render(container, eventItemComponent);
 };
