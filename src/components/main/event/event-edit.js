@@ -1,10 +1,11 @@
 import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../../../common/consts';
-import {createElement, getFullDate} from '../../../common/utils';
+import {getFullDate} from '../../../common/utils';
 import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './components/event-types';
 import {createOptions} from './components/event-options';
 import {createOffers} from './components/event-selectors';
 import {createPhotos} from './components/event-photos';
+import AbstractComponent from '../../abstract-component';
 
 const createEventEdit = (event) => {
   const {type, city, startTime, endTime, price, description, photos} = event;
@@ -102,25 +103,14 @@ const createEventEdit = (event) => {
   );
 };
 
-export default class EventEdit {
+export default class EventEdit extends AbstractComponent {
   constructor(event) {
+    super();
+
     this._event = event;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventEdit(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

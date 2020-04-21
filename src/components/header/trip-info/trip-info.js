@@ -1,6 +1,6 @@
 import {createTripInfoMain} from './components/trip-info-main';
-import {createElement} from '../../../common/utils';
 import {createTripPrice} from './components/trip-price';
+import AbstractComponent from '../../abstract-component';
 
 const createTripInfo = (events) => {
   return (
@@ -11,25 +11,14 @@ const createTripInfo = (events) => {
   );
 };
 
-export default class TripInfo {
+export default class TripInfo extends AbstractComponent {
   constructor(events) {
+    super();
+
     this._events = events;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripInfo(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,6 +1,6 @@
 import {createOffers} from './components/event-offers';
 import {getEventInfo} from './common/event-info';
-import {createElement} from '../../../common/utils';
+import AbstractComponent from '../../abstract-component';
 
 const createEventItem = (event) => {
   const {type, city, price, offers} = event;
@@ -36,25 +36,14 @@ const createEventItem = (event) => {
   );
 };
 
-export default class EventItem {
+export default class EventItem extends AbstractComponent {
   constructor(event) {
+    super();
+
     this._event = event;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventItem(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
