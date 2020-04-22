@@ -1,4 +1,4 @@
-import {getBoolean, shuffleArray, getRandomNumber, getNewDate, getRandomDate} from '../common/utils';
+import {getBoolean, shuffleArray, getRandomNumber, getNewDate, getRandomDate} from '../common/utils/helpers';
 import {Price, Description, Photos, MAX_OFFERS, DESCRIPTIONS, EVENT_TYPES, DESTINATIONS} from '../common/consts';
 import {eventOffers} from './offer';
 

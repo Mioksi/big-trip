@@ -1,5 +1,6 @@
 import {MONTHS} from '../../../common/consts';
-import {createElement, getIsoDate} from '../../../common/utils';
+import {getIsoDate} from '../../../common/utils/helpers';
+import AbstractComponent from '../../abstract-component';
 
 const createDayItem = (day, index) => {
   const date = new Date(day);
@@ -17,26 +18,15 @@ const createDayItem = (day, index) => {
   );
 };
 
-export default class DayItem {
+export default class DayItem extends AbstractComponent {
   constructor(day, index) {
+    super();
+
     this._day = day;
     this._index = index;
-    this._element = null;
   }
 
   getTemplate() {
     return createDayItem(this._day, this._index);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {getBoolean} from '../common/utils';
+import {getBoolean} from '../common/utils/helpers';
 
 const eventOffers = [
   {

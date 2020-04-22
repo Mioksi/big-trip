@@ -1,4 +1,4 @@
-import {formatTime, getIsoDate} from '../../../../common/utils';
+import {formatTime, getIsoDate} from '../../../../common/utils/helpers';
 import {eventPlaceholder} from '../../../../mock/event';
 
 const getEventTime = (time) => formatTime(time);
