@@ -48,3 +48,8 @@ export const Photos = {
   MIN: 1,
   MAX: 5
 };
+export const SortType = {
+  EVENT: `sort-event`,
+  TIME: `sort-time`,
+  PRICE: `sort-price`
+};

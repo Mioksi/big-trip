@@ -1,4 +1,4 @@
-import AbstractComponent from '../../abstract-component';
+import AbstractComponent from '../../abstracts/abstract-component';
 
 const createNoEvents = () => `<p class="trip-events__msg">Click New Event to create your first point</p>`;
 

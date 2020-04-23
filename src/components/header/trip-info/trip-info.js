@@ -1,6 +1,6 @@
 import {createTripInfoMain} from './components/trip-info-main';
 import {createTripPrice} from './components/trip-price';
-import AbstractComponent from '../../abstract-component';
+import AbstractComponent from '../../abstracts/abstract-component';
 
 const createTripInfo = (events) => {
   return (

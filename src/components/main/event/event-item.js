@@ -1,6 +1,6 @@
 import {createOffers} from './components/event-offers';
 import {getEventInfo} from './common/event-info';
-import AbstractComponent from '../../abstract-component';
+import AbstractComponent from '../../abstracts/abstract-component';
 
 const createEventItem = (event) => {
   const {type, city, price, offers} = event;

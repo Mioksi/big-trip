@@ -1,4 +1,4 @@
-import AbstractComponent from '../../abstract-component';
+import AbstractComponent from '../../abstracts/abstract-component';
 
 const createFilters = () => (
   `<form class="trip-filters" action="#" method="get">

@@ -1,4 +1,5 @@
-import AbstractComponent from '../../abstract-component';
+import {SortType} from '../../../common/consts';
+import AbstractComponent from '../../abstracts/abstract-component';
 
 const createSorting = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -30,8 +31,32 @@ const createSorting = () => (
   </form>`
 );
 
-export default class Sorting extends AbstractComponent {
+export default class Sort extends AbstractComponent {
+  constructor() {
+    super();
+
+    this._currentSortType = SortType.EVENT;
+  }
+
   getTemplate() {
     return createSorting();
+  }
+
+  setSortTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      if (evt.target.tagName !== `INPUT`) {
+        return;
+      }
+
+      const sortType = evt.target.id;
+
+      if (this._currentSortType === sortType) {
+        return;
+      }
+
+      this._currentSortType = sortType;
+
+      handler(this._currentSortType);
+    });
   }
 }
