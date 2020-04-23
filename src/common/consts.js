@@ -53,3 +53,8 @@ export const SortType = {
   TIME: `sort-time`,
   PRICE: `sort-price`
 };
+export const TimeMS = {
+  IN_MINUTE: 60 * 1000,
+  IN_HOUR: 3600 * 1000,
+  IN_DAY: 24 * 3600 * 1000
+};
