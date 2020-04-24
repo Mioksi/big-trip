@@ -5,7 +5,7 @@ import {createTransferItems, createActivityItems} from './components/event-types
 import {createOptions} from './components/event-options';
 import {createOffers} from './components/event-selectors';
 import {createPhotos} from './components/event-photos';
-import AbstractComponent from '../../abstract-component';
+import AbstractComponent from '../../abstracts/abstract-component';
 
 const createEventEdit = (event) => {
   const {type, city, startTime, endTime, price, description, photos} = event;

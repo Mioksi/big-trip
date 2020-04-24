@@ -48,3 +48,13 @@ export const Photos = {
   MIN: 1,
   MAX: 5
 };
+export const SortType = {
+  EVENT: `sort-event`,
+  TIME: `sort-time`,
+  PRICE: `sort-price`
+};
+export const TimeMS = {
+  IN_MINUTE: 60 * 1000,
+  IN_HOUR: 3600 * 1000,
+  IN_DAY: 24 * 3600 * 1000
+};

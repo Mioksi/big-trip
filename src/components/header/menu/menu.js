@@ -1,4 +1,4 @@
-import AbstractComponent from '../../abstract-component';
+import AbstractComponent from '../../abstracts/abstract-component';
 
 const createMenu = () => (
   `<nav class="trip-controls__trip-tabs  trip-tabs">

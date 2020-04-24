@@ -1,6 +1,9 @@
 import {MONTHS} from '../../../common/consts';
 import {getIsoDate} from '../../../common/utils/helpers';
-import AbstractComponent from '../../abstract-component';
+import AbstractComponent from '../../abstracts/abstract-component';
+
+const isEmptyIndex = (index) => index ? index : ``;
+const isEmptyDay = (day, value) => day ? value : ``;
 
 const createDayItem = (day, index) => {
   const date = new Date(day);
@@ -10,8 +13,8 @@ const createDayItem = (day, index) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${index + 1}</span>
-        <time class="day__date" datetime="${dateValue.substr(0, 10)}">${dateTitle}</time>
+        <span class="day__counter">${isEmptyIndex(index)}</span>
+        <time class="day__date" datetime="${isEmptyDay(day, dateValue)}">${isEmptyDay(day, dateTitle)}</time>
       </div>
       <ul class="trip-events__list"></ul>
     </li>`

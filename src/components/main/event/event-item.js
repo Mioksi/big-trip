@@ -1,10 +1,10 @@
 import {createOffers} from './components/event-offers';
 import {getEventInfo} from './common/event-info';
-import AbstractComponent from '../../abstract-component';
+import AbstractComponent from '../../abstracts/abstract-component';
 
 const createEventItem = (event) => {
   const {type, city, price, offers} = event;
-  const [eventType, start, end, startDate, endDate] = getEventInfo(event);
+  const [eventType, start, end, startDate, endDate, timeDifference] = getEventInfo(event);
 
   return (
     `<li class="trip-events__item">
@@ -19,7 +19,7 @@ const createEventItem = (event) => {
             &mdash;
             <time class="event__end-time" datetime="${endDate.substr(0, 16)}">${end}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${timeDifference}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
