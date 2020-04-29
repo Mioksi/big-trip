@@ -1,6 +1,6 @@
 import {getBoolean, shuffleArray, getRandomNumber, getNewDate, getRandomDate} from '../common/utils/helpers';
-import {Price, Description, Photos, MAX_OFFERS, DESCRIPTIONS, EVENT_TYPES, DESTINATIONS} from '../common/consts';
-import {eventOffers} from './offer';
+import {Price, Description, Photos, DESCRIPTIONS, EVENT_TYPES, DESTINATIONS, MAX_OFFERS} from '../common/consts';
+import {generateOffersByType} from './offer';
 
 const eventPlaceholder = {
   'taxi': `Taxi to `,
@@ -23,28 +23,40 @@ const getPhotos = () => {
   return new Array(photosAmount).fill(``).map(getPhotoLink);
 };
 
-const generateOffers = () => eventOffers.filter(() => getBoolean()).slice(0, MAX_OFFERS);
-
 const getDescriptions = () => {
   return shuffleArray(DESCRIPTIONS).slice(0, getRandomNumber(Description.MAX, Description.MIN)).join(` `);
 };
 
+const generateDestinations = () => DESTINATIONS.map((city) => {
+  return {
+    city,
+    description: getDescriptions(),
+    photos: getPhotos()
+  };
+});
+
+const destinations = generateDestinations();
+
 const generateTripEvent = () => {
+  const type = EVENT_TYPES[getRandomNumber(EVENT_TYPES.length)];
+
   const startTime = getNewDate();
   const endTime = getRandomDate(startTime, new Date(2020, 4, 1));
 
+  const currentOffers = generateOffersByType(type);
+  const generateOffers = () => currentOffers.filter(() => getBoolean()).slice(0, MAX_OFFERS);
+
   return {
-    type: EVENT_TYPES[getRandomNumber(EVENT_TYPES.length)],
+    type,
     startTime,
     endTime,
-    city: DESTINATIONS[getRandomNumber(DESTINATIONS.length)],
-    description: getDescriptions(),
+    destination: destinations[getRandomNumber(DESTINATIONS.length)],
     price: getRandomNumber(Price.MIN, Price.MAX),
-    photos: getPhotos(),
-    offers: generateOffers()
+    offers: generateOffers(),
+    isFavorite: getBoolean()
   };
 };
 
 const generateTripEvents = (count) => new Array(count).fill(``).map(generateTripEvent);
 
-export {eventPlaceholder, generateTripEvents};
+export {eventPlaceholder, generateTripEvents, destinations};

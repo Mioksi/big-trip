@@ -7,9 +7,9 @@ import DayListComponent from '../components/main/day/day-list';
 import PointController from './point';
 import {getTripDays} from '../components/main/day/utils/utils';
 
-const renderEvents = (tripEventsList, events) => {
+const renderEvents = (tripEventsList, events, onDataChange) => {
   return events.map((event) => {
-    const pointController = new PointController(tripEventsList);
+    const pointController = new PointController(tripEventsList, onDataChange);
 
     pointController.render(event);
 
@@ -56,6 +56,8 @@ export default class TripController {
     this._noEventsComponent = new NoEventsComponent();
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
@@ -92,7 +94,7 @@ export default class TripController {
 
       const filterEvents = this._events.filter((event) => event.startTime.getDate() === dateTime.getDate());
 
-      const newPoints = renderEvents(eventList, filterEvents);
+      const newPoints = renderEvents(eventList, filterEvents, this._onDataChange);
 
       this._pointControllers = this._pointControllers.concat(newPoints);
     };
@@ -107,7 +109,19 @@ export default class TripController {
 
     const tripEventsList = day.getElement().querySelector(`.trip-events__list`);
 
-    this._pointControllers = renderEvents(tripEventsList, sortedEvents);
+    this._pointControllers = renderEvents(tripEventsList, sortedEvents, this._onDataChange);
+  }
+
+  _onDataChange(pointController, oldData, newData) {
+    const index = this._events.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._events = [].concat(this._events.slice(0, index), newData, this._events.slice(index + 1));
+
+    pointController.render(this._events[index]);
   }
 
   _onSortTypeChange(sortType) {

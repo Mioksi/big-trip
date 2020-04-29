@@ -36,7 +36,7 @@ const getEventInfo = (event) => {
   const endDate = getIsoDate(endTime);
   const timeDifference = calculateTimeDifference(startTime, endTime);
 
-  return [eventType, start, end, startDate, endDate, timeDifference];
+  return [start, end, eventType, startDate, endDate, timeDifference];
 };
 
 export {getEventInfo};

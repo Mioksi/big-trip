@@ -4,8 +4,9 @@ import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
 
 export default class PointController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
 
     this._eventItemComponent = null;
     this._eventEditComponent = null;
@@ -14,6 +15,9 @@ export default class PointController {
   }
 
   render(event) {
+    const oldEventItemComponent = this._eventItemComponent;
+    const oldEventEditComponent = this._eventEditComponent;
+
     this._eventItemComponent = new EventItemComponent(event);
     this._eventEditComponent = new EventEditComponent(event);
 
@@ -29,7 +33,18 @@ export default class PointController {
       this._replaceEditToEvent();
     });
 
-    render(this._container, this._eventItemComponent);
+    this._eventEditComponent.setFavoriteButtonHandler(() => {
+      this._onDataChange(this, event, Object.assign({}, event, {
+        isFavorite: !event.isFavorite
+      }));
+    });
+
+    if (oldEventEditComponent && oldEventItemComponent) {
+      replace(this._eventItemComponent, oldEventItemComponent);
+      replace(this._eventEditComponent, oldEventEditComponent);
+    } else {
+      render(this._container, this._eventItemComponent);
+    }
   }
 
   _replaceEditToEvent() {

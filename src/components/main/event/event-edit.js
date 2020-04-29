@@ -3,13 +3,25 @@ import {getFullDate} from '../../../common/utils/helpers';
 import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './components/event-types';
 import {createOptions} from './components/event-options';
-import {createOffers} from './components/event-selectors';
+import {createOffer} from './components/event-selectors';
 import {createPhotos} from './components/event-photos';
-import AbstractComponent from '../../abstracts/abstract-component';
+import AbstractSmartComponent from '../../abstracts/abstract-smart-component';
+import {eventPlaceholder} from '../../../mock/event';
+import {destinations} from '../../../mock/event';
+import {generateOffersByType} from '../../../mock/offer';
 
-const createEventEdit = (event) => {
-  const {type, city, startTime, endTime, price, description, photos} = event;
-  const [eventType, start, end] = getEventInfo(event);
+const getCheckedInput = (value) => value ? `checked` : ``;
+
+const createEventEdit = (event, options = {}) => {
+  const {startTime, endTime, price, isFavorite} = event;
+  const {type, offers, destination} = options;
+  const {city, description, photos} = destination;
+  const [start, end] = getEventInfo(event);
+  const eventType = eventPlaceholder[type];
+
+  const createOffers = () => {
+    return offers.map(createOffer).join(``);
+  };
 
   const startFullDate = getFullDate(startTime);
   const endFullDate = getFullDate(endTime);
@@ -80,8 +92,8 @@ const createEventEdit = (event) => {
           >
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+        <button class="event__reset-btn" type="reset">Delete</button>
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${getCheckedInput(isFavorite)}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -113,18 +125,73 @@ const createEventEdit = (event) => {
   );
 };
 
-export default class EventEdit extends AbstractComponent {
+export default class EventEdit extends AbstractSmartComponent {
   constructor(event) {
     super();
 
     this._event = event;
+    this._eventType = this._event.type;
+    this._eventOffers = this._event.offers;
+    this._eventDestination = this._event.destination;
+
+    this._submitHandler = null;
+    this._favoriteButtonHandler = null;
+
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createEventEdit(this._event);
+    return createEventEdit(this._event, {
+      type: this._eventType,
+      offers: this._eventOffers,
+      destination: this._eventDestination
+    });
+  }
+
+  recoveryListeners() {
+    this.setFavoriteButtonHandler(this._favoriteButtonHandler);
+    this.setSubmitHandler(this._submitHandler);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
+    this._submitHandler = handler;
+  }
+
+  setFavoriteButtonHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+    this._favoriteButtonHandler = handler;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.event__type-list`)
+      .addEventListener(`change`, (evt) => {
+        this._eventType = evt.target.value;
+        this._eventOffers = generateOffersByType(this._eventType);
+
+        this.rerender();
+      });
+
+    element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
+      evt.preventDefault();
+
+      const currentCity = evt.target.value;
+      const index = destinations.map((destination) => destination.city).indexOf(currentCity);
+
+      if (index === -1) {
+        return;
+      }
+
+      this._eventDestination = destinations[index];
+
+      this.rerender();
+    });
   }
 }
