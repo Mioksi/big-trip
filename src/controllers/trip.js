@@ -7,9 +7,9 @@ import DayListComponent from '../components/main/day/day-list';
 import PointController from './point';
 import {getTripDays} from '../components/main/day/utils/utils';
 
-const renderEvents = (tripEventsList, events, onDataChange) => {
+const renderEvents = (tripEventsList, events, onDataChange, onViewChange) => {
   return events.map((event) => {
-    const pointController = new PointController(tripEventsList, onDataChange);
+    const pointController = new PointController(tripEventsList, onDataChange, onViewChange);
 
     pointController.render(event);
 
@@ -57,6 +57,7 @@ export default class TripController {
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
@@ -94,7 +95,7 @@ export default class TripController {
 
       const filterEvents = this._events.filter((event) => event.startTime.getDate() === dateTime.getDate());
 
-      const newPoints = renderEvents(eventList, filterEvents, this._onDataChange);
+      const newPoints = renderEvents(eventList, filterEvents, this._onDataChange, this._onViewChange);
 
       this._pointControllers = this._pointControllers.concat(newPoints);
     };
@@ -109,7 +110,7 @@ export default class TripController {
 
     const tripEventsList = day.getElement().querySelector(`.trip-events__list`);
 
-    this._pointControllers = renderEvents(tripEventsList, sortedEvents, this._onDataChange);
+    this._pointControllers = renderEvents(tripEventsList, sortedEvents, this._onDataChange, this._onViewChange);
   }
 
   _onDataChange(pointController, oldData, newData) {
@@ -122,6 +123,10 @@ export default class TripController {
     this._events = [].concat(this._events.slice(0, index), newData, this._events.slice(index + 1));
 
     pointController.render(this._events[index]);
+  }
+
+  _onViewChange() {
+    this._pointControllers.forEach((it) => it.setDefaultView());
   }
 
   _onSortTypeChange(sortType) {

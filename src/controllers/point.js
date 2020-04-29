@@ -1,12 +1,15 @@
-import {ESC_KEY} from '../common/consts';
+import {ESC_KEY, Mode} from '../common/consts';
 import {render, replace} from '../common/utils/render';
 import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
 
 export default class PointController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
+    this._mode = Mode.DEFAULT;
+
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
 
     this._eventItemComponent = null;
     this._eventEditComponent = null;
@@ -47,13 +50,27 @@ export default class PointController {
     }
   }
 
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditToEvent();
+    }
+  }
+
   _replaceEditToEvent() {
+    this._eventEditComponent.reset();
+
+    this._mode = Mode.DEFAULT;
+
     replace(this._eventItemComponent, this._eventEditComponent);
 
     document.removeEventListener(`keydown`, this._onFormEscPress);
   }
 
   _replaceEventToEdit() {
+    this._onViewChange();
+
+    this._mode = Mode.EDIT;
+
     replace(this._eventEditComponent, this._eventItemComponent);
   }
 
