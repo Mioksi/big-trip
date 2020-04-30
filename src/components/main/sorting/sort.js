@@ -36,14 +36,16 @@ export default class Sort extends AbstractComponent {
     super();
 
     this._currentSortType = SortType.EVENT;
+
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
   }
 
   getTemplate() {
     return createSorting();
   }
 
-  setSortTypeChangeHandler(handler) {
-    this.getElement().addEventListener(`click`, (evt) => {
+  _onSortTypeChange(handler) {
+    return (evt) => {
       if (evt.target.tagName !== `INPUT`) {
         return;
       }
@@ -57,6 +59,10 @@ export default class Sort extends AbstractComponent {
       this._currentSortType = sortType;
 
       handler(this._currentSortType);
-    });
+    };
+  }
+
+  setSortTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, this._onSortTypeChange(handler));
   }
 }

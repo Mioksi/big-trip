@@ -137,6 +137,9 @@ export default class EventEdit extends AbstractSmartComponent {
     this._submitHandler = null;
     this._favoriteButtonHandler = null;
 
+    this._onEventTypeChange = this._onEventTypeChange.bind(this);
+    this._onDestinationChange = this._onDestinationChange.bind(this);
+
     this._subscribeOnEvents();
   }
 
@@ -178,30 +181,35 @@ export default class EventEdit extends AbstractSmartComponent {
     this._favoriteButtonHandler = handler;
   }
 
+  _onEventTypeChange(evt) {
+    this._eventType = evt.target.value;
+    this._eventOffers = generateOffersByType(this._eventType);
+
+    this.rerender();
+  }
+
+  _onDestinationChange(evt) {
+    evt.preventDefault();
+
+    const currentCity = evt.target.value;
+    const index = destinations.map((destination) => destination.city).indexOf(currentCity);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._eventDestination = destinations[index];
+
+    this.rerender();
+  }
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    element.querySelector(`.event__type-list`)
-      .addEventListener(`change`, (evt) => {
-        this._eventType = evt.target.value;
-        this._eventOffers = generateOffersByType(this._eventType);
+    const eventTypeList = element.querySelector(`.event__type-list`);
+    const eventDestination = element.querySelector(`.event__input--destination`);
 
-        this.rerender();
-      });
-
-    element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
-      evt.preventDefault();
-
-      const currentCity = evt.target.value;
-      const index = destinations.map((destination) => destination.city).indexOf(currentCity);
-
-      if (index === -1) {
-        return;
-      }
-
-      this._eventDestination = destinations[index];
-
-      this.rerender();
-    });
+    eventTypeList.addEventListener(`change`, this._onEventTypeChange);
+    eventDestination.addEventListener(`change`, this._onDestinationChange);
   }
 }
