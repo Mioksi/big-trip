@@ -1,12 +1,10 @@
 import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../../../common/consts';
-import {getFullDate} from '../../../common/utils/helpers';
 import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './components/event-types';
 import {createOptions} from './components/event-options';
 import {createOffer} from './components/event-selectors';
 import {createPhotos} from './components/event-photos';
 import AbstractSmartComponent from '../../abstracts/abstract-smart-component';
-import {eventPlaceholder} from '../../../mock/event';
 import {destinations} from '../../../mock/event';
 import {generateOffersByType} from '../../../mock/offer';
 import flatpickr from "flatpickr";
@@ -16,18 +14,14 @@ import "flatpickr/dist/flatpickr.min.css";
 const getCheckedInput = (value) => value ? `checked` : ``;
 
 const createEventEdit = (event, options = {}) => {
-  const {startTime, endTime, price, isFavorite} = event;
+  const {price, isFavorite} = event;
   const {type, offers, destination} = options;
   const {city, description, photos} = destination;
-  const [start, end] = getEventInfo(event);
-  const eventType = eventPlaceholder[type];
+  const [start, end, startFullDate, endFullDate, eventType] = getEventInfo(event);
 
   const createOffers = () => {
     return offers.map(createOffer).join(``);
   };
-
-  const startFullDate = getFullDate(startTime);
-  const endFullDate = getFullDate(endTime);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">

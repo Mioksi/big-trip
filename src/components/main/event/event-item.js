@@ -5,7 +5,7 @@ import AbstractComponent from '../../abstracts/abstract-component';
 const createEventItem = (event) => {
   const {type, destination, price, offers} = event;
   const {city} = destination;
-  const [start, end, eventType, startDate, endDate, timeDifference] = getEventInfo(event);
+  const [start, end, , , eventType, startIsoDate, endIsoDate, timeDifference] = getEventInfo(event);
 
   return (
     `<li class="trip-events__item">
@@ -16,9 +16,9 @@ const createEventItem = (event) => {
         <h3 class="event__title">${eventType} ${city}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startDate.substr(0, 16)}">${start}</time>
+            <time class="event__start-time" datetime="${startIsoDate}">${start}</time>
             &mdash;
-            <time class="event__end-time" datetime="${endDate.substr(0, 16)}">${end}</time>
+            <time class="event__end-time" datetime="${endIsoDate}">${end}</time>
           </p>
           <p class="event__duration">${timeDifference}</p>
         </div>

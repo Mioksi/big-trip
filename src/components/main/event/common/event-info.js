@@ -1,8 +1,6 @@
 import {TimeMS} from '../../../../common/consts';
-import {formatTime, getIsoDate} from '../../../../common/utils/helpers';
+import {formatTime, formatDate, getIsoDate} from '../../../../common/utils/helpers';
 import {eventPlaceholder} from '../../../../mock/event';
-
-const getEventTime = (time) => formatTime(time);
 
 const calculateTimeDifference = (startTime, endTime) => {
   const difference = endTime.getTime() - startTime.getTime();
@@ -30,13 +28,15 @@ const getEventInfo = (event) => {
   const {type, startTime, endTime} = event;
 
   const eventType = eventPlaceholder[type];
-  const start = getEventTime(startTime);
-  const end = getEventTime(endTime);
-  const startDate = getIsoDate(startTime);
-  const endDate = getIsoDate(endTime);
+  const start = formatTime(startTime);
+  const end = formatTime(endTime);
+  const startFullDate = formatDate(startTime);
+  const endFullDate = formatDate(endTime);
+  const startIsoDate = getIsoDate(startTime);
+  const endIsoDate = getIsoDate(endTime);
   const timeDifference = calculateTimeDifference(startTime, endTime);
 
-  return [start, end, eventType, startDate, endDate, timeDifference];
+  return [start, end, startFullDate, endFullDate, eventType, startIsoDate, endIsoDate, timeDifference];
 };
 
 export {getEventInfo};

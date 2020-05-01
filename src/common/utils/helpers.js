@@ -1,4 +1,5 @@
-import {Sign, MAX_HOURS_RANGE, HOURS_FORMAT, MAX_DAYS, MAX_HOURS, MAX_MINUTES, TIME_OFFSET} from '../consts';
+import {Sign, MAX_DAYS, MAX_HOURS, MAX_MINUTES} from '../consts';
+import moment from "moment";
 
 export const getRandomNumber = (max, min = 0) => {
   return min + Math.floor(Math.random() * (max - min));
@@ -18,22 +19,9 @@ export const shuffleArray = function (array) {
   return array;
 };
 
-const castTimeFormat = (value) => value < MAX_HOURS_RANGE ? `0${value}` : String(value);
-
-export const formatTime = (date) => {
-  const hours = castTimeFormat(date.getHours() % HOURS_FORMAT);
-  const minutes = castTimeFormat(date.getMinutes());
-
-  return `${hours}:${minutes}`;
-};
-
-export const formatDate = (date) => {
-  const day = castTimeFormat(date.getDate());
-  const month = castTimeFormat(date.getMonth() + 1);
-  const year = castTimeFormat(date.getFullYear());
-
-  return `${day}/${month}/${year.substr(-2)}`;
-};
+export const formatTime = (date) => moment(date).format(`HH:mm`);
+export const formatDate = (date) => moment(date).format(`DD/MM/YY`);
+export const getIsoDate = (date) => moment(date).format(`YYYY-MM-DDTHH:mm`);
 
 export const getNewDate = () => {
   const targetDate = new Date();
@@ -49,13 +37,4 @@ export const getNewDate = () => {
 
 export const getRandomDate = (startDate, endDate) => {
   return new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
-};
-
-export const getFullDate = (date) => formatDate(date);
-
-export const getIsoDate = (date) => {
-  const offset = date.getTimezoneOffset() * TIME_OFFSET;
-  const targetDate = new Date(date - offset);
-
-  return targetDate.toISOString();
 };
