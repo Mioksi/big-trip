@@ -9,6 +9,9 @@ import AbstractSmartComponent from '../../abstracts/abstract-smart-component';
 import {eventPlaceholder} from '../../../mock/event';
 import {destinations} from '../../../mock/event';
 import {generateOffersByType} from '../../../mock/offer';
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.min.css";
 
 const getCheckedInput = (value) => value ? `checked` : ``;
 
@@ -136,10 +139,12 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._submitHandler = null;
     this._favoriteButtonHandler = null;
+    this._flatpickr = null;
 
     this._onEventTypeChange = this._onEventTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
 
+    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -159,6 +164,8 @@ export default class EventEdit extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+
+    this._applyFlatpickr();
   }
 
   reset() {
@@ -186,6 +193,27 @@ export default class EventEdit extends AbstractSmartComponent {
     this._eventOffers = generateOffersByType(this._eventType);
 
     this.rerender();
+  }
+
+  _getFlatpickrConfig(timeInput, date) {
+    this._flatpickr = flatpickr(timeInput, {
+      enableTime: true,
+      dateFormat: `d/m/y H:i`,
+      defaultDate: date || ``,
+    });
+  }
+
+  _applyFlatpickr() {
+    const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
+    const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
+
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    this._getFlatpickrConfig(startTimeInput, this._event.startTime);
+    this._getFlatpickrConfig(endTimeInput, this._event.endTime);
   }
 
   _onDestinationChange(evt) {
