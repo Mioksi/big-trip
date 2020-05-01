@@ -1,25 +1,16 @@
 import {TimeMS} from '../../../../common/consts';
 import {formatTime, formatDate, getIsoDate} from '../../../../common/utils/helpers';
 import {eventPlaceholder} from '../../../../mock/event';
+import moment from "moment";
 
-const calculateTimeDifference = (startTime, endTime) => {
-  const difference = endTime.getTime() - startTime.getTime();
-  const differenceDays = Math.floor(difference / TimeMS.IN_DAY);
-  const differenceHours = Math.floor((difference % TimeMS.IN_DAY) / TimeMS.IN_HOUR);
-  const differenceMinutes = Math.floor(((difference % TimeMS.IN_DAY) % TimeMS.IN_HOUR) / TimeMS.IN_MINUTE);
+const calculateTimeDifference = (start, end) => {
+  const startTime = moment(start);
+  const endTime = moment(end);
+  const difference = endTime.diff(startTime);
 
-  const minutes = differenceMinutes > 0 ? `${differenceMinutes}M` : ``;
-  let days = ``;
-  let hours = ``;
-
-  if (differenceDays > 0) {
-    days = differenceDays < 10 ? `0${differenceDays}D` : `${differenceDays}D`;
-    hours = differenceHours < 10 ? `0${differenceHours}H` : `${differenceHours}H`;
-  } else {
-    if (differenceHours > 0) {
-      hours = differenceHours < 10 ? `0${differenceHours}H` : `${differenceHours}H`;
-    }
-  }
+  const days = (difference > TimeMS.IN_DAY) ? endTime.diff(startTime, `days`) + `D` : ``;
+  const hours = (difference > TimeMS.IN_HOUR) ? moment(difference).format(`HH`) + `H` : ``;
+  const minutes = moment(difference).format(`mm`) + `M`;
 
   return `${days} ${hours} ${minutes}`;
 };

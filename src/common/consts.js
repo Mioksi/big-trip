@@ -52,7 +52,6 @@ export const SortType = {
   PRICE: `sort-price`
 };
 export const TimeMS = {
-  IN_MINUTE: 60 * MILLISECOND,
   IN_HOUR: 3600 * MILLISECOND,
   IN_DAY: 24 * 3600 * MILLISECOND
 };
