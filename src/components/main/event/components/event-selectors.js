@@ -1,19 +1,17 @@
-import {generateOffer} from '../../../../mock/offer';
+import {getBoolean} from '../../../../common/utils/helpers';
 
-const offers = generateOffer();
-
-const getCheckedFilter = (isChecked) => isChecked ? `checked` : ``;
+const getCheckedFilter = () => getBoolean() ? `checked` : ``;
 
 const createOffer = (offer) => {
-  const {type, name, price, isChecked} = offer;
+  const {type, name, price} = offer;
 
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden"
-        id="event-offer-luggage-1"
+        id="event-offer-${type}-1"
         type="checkbox"
-        name="event-offer-${type}"
-        ${getCheckedFilter(isChecked)}
+        name="event-offer-${type}-1"
+        ${getCheckedFilter()}
        >
       <label class="event__offer-label" for="event-offer-${type}-1">
         <span class="event__offer-title">${name}</span>
@@ -24,8 +22,4 @@ const createOffer = (offer) => {
   );
 };
 
-const createOffers = () => {
-  return offers.map((createOffer)).join(``);
-};
-
-export {createOffers};
+export {createOffer};

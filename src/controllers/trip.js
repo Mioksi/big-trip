@@ -1,49 +1,20 @@
 import {SortType} from '../common/consts';
-import {isEscEvent} from '../common/utils/helpers';
-import {render, replace} from '../common/utils/render';
-import EventItemComponent from '../components/main/event/event-item';
-import EventEditComponent from '../components/main/event/event-edit';
+import {render} from '../common/utils/render';
 import DayItemComponent from '../components/main/day/day-item';
 import NoEventsComponent from '../components/main/event/no-events';
 import SortComponent from '../components/main/sorting/sort';
 import DayListComponent from '../components/main/day/day-list';
+import PointController from './point';
+import {getTripDays} from '../components/main/day/utils/utils';
 
-const renderEvent = (container, event) => {
-  const eventItemComponent = new EventItemComponent(event);
-  const eventEditComponent = new EventEditComponent(event);
+const renderEvents = (tripEventsList, events, onDataChange, onViewChange) => {
+  return events.map((event) => {
+    const pointController = new PointController(tripEventsList, onDataChange, onViewChange);
 
-  const replaceEventToEdit = () => {
-    replace(eventEditComponent, eventItemComponent);
-  };
+    pointController.render(event);
 
-  const replaceEditToEvent = () => {
-    replace(eventItemComponent, eventEditComponent);
-  };
-
-  const onFormEscPress = (evt) => {
-    isEscEvent(evt, replaceEditToEvent);
-
-    document.removeEventListener(`keydown`, onFormEscPress);
-  };
-
-  const onRollupButtonClick = () => {
-    replaceEventToEdit();
-
-    document.addEventListener(`keydown`, onFormEscPress);
-  };
-
-  const onFormSave = (evt) => {
-    evt.preventDefault();
-
-    replaceEditToEvent();
-
-    document.removeEventListener(`keydown`, onFormEscPress);
-  };
-
-  eventItemComponent.setRollupButtonClickHandler(onRollupButtonClick);
-  eventEditComponent.setSubmitHandler(onFormSave);
-
-  render(container, eventItemComponent);
+    return pointController;
+  });
 };
 
 const renderDay = (container, day, index) => {
@@ -77,12 +48,23 @@ export default class TripController {
   constructor(container) {
     this._container = container;
 
+    this._events = [];
+    this._pointControllers = [];
+
     this._sortComponent = new SortComponent();
     this._dayListComponent = new DayListComponent();
     this._noEventsComponent = new NoEventsComponent();
+
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
+
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
-  render(events, allDays) {
+  render(events) {
+    this._events = events;
+
     const container = this._container;
     const dayList = this._dayListComponent.getElement();
 
@@ -95,49 +77,68 @@ export default class TripController {
     render(container, this._sortComponent);
     render(container, this._dayListComponent);
 
-    const renderEventsByDays = (tripEvents) => {
-      allDays.map((day, index) => renderDay(dayList, day, index + 1));
+    this._renderEventsByDays(this._events, dayList);
+  }
 
-      const days = container.querySelectorAll(`.day`);
+  _renderEventsByDays(events, dayList) {
+    const allDays = getTripDays(events);
 
-      const getDayItem = (day) => {
-        const dayDate = day.querySelector(`.day__date`);
-        const dateTime = new Date(dayDate.dateTime);
+    allDays.map((day, index) => renderDay(dayList, day, index + 1));
 
-        const eventList = day.querySelector(`.trip-events__list`);
+    const days = this._container.querySelectorAll(`.day`);
 
-        for (let event of tripEvents) {
-          if (event.startTime.getDate() === dateTime.getDate()) {
-            renderEvent(eventList, event);
-          }
-        }
-      };
+    const getDayItem = (day) => {
+      const dayDate = day.querySelector(`.day__date`);
+      const dateTime = new Date(dayDate.dateTime);
 
-      days.forEach(getDayItem);
+      const eventList = day.querySelector(`.trip-events__list`);
+
+      const filterEvents = this._events.filter((event) => event.startTime.getDate() === dateTime.getDate());
+
+      const newPoints = renderEvents(eventList, filterEvents, this._onDataChange, this._onViewChange);
+
+      this._pointControllers = this._pointControllers.concat(newPoints);
     };
 
-    const renderAllEvents = (sortedEvents) => {
-      const day = new DayItemComponent(null);
+    days.forEach(getDayItem);
+  }
 
-      render(dayList, day);
+  _renderAllEvents(sortedEvents, dayList) {
+    const day = new DayItemComponent(null);
 
-      const tripEventsList = day.getElement().querySelector(`.trip-events__list`);
+    render(dayList, day);
 
-      sortedEvents.map((event) => renderEvent(tripEventsList, event));
-    };
+    const tripEventsList = day.getElement().querySelector(`.trip-events__list`);
 
-    renderEventsByDays(events);
+    this._pointControllers = renderEvents(tripEventsList, sortedEvents, this._onDataChange, this._onViewChange);
+  }
 
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      const sortedEvents = getSortedEvents(events, sortType);
+  _onDataChange(pointController, oldData, newData) {
+    const index = this._events.findIndex((it) => it === oldData);
 
-      dayList.innerHTML = ``;
+    if (index === -1) {
+      return;
+    }
 
-      if (sortType === SortType.EVENT) {
-        renderEventsByDays(sortedEvents);
-      } else {
-        renderAllEvents(sortedEvents);
-      }
-    });
+    this._events = [].concat(this._events.slice(0, index), newData, this._events.slice(index + 1));
+
+    pointController.render(this._events[index]);
+  }
+
+  _onViewChange() {
+    this._pointControllers.forEach((it) => it.setDefaultView());
+  }
+
+  _onSortTypeChange(sortType) {
+    const sortedEvents = getSortedEvents(this._events, sortType);
+    const dayList = this._dayListComponent.getElement();
+
+    dayList.innerHTML = ``;
+
+    if (sortType === SortType.EVENT) {
+      this._renderEventsByDays(sortedEvents, dayList);
+    } else {
+      this._renderAllEvents(sortedEvents, dayList);
+    }
   }
 }

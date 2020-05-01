@@ -3,8 +3,9 @@ import {getEventInfo} from './common/event-info';
 import AbstractComponent from '../../abstracts/abstract-component';
 
 const createEventItem = (event) => {
-  const {type, city, price, offers} = event;
-  const [eventType, start, end, startDate, endDate, timeDifference] = getEventInfo(event);
+  const {type, destination, price, offers} = event;
+  const {city} = destination;
+  const [start, end, eventType, startDate, endDate, timeDifference] = getEventInfo(event);
 
   return (
     `<li class="trip-events__item">
@@ -26,7 +27,7 @@ const createEventItem = (event) => {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-            ${createOffers(offers)}
+          ${createOffers(offers)}
         </ul>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>

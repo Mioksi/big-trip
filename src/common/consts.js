@@ -7,6 +7,7 @@ export const MAX_DAYS = 14;
 export const MAX_OFFERS = 5;
 export const TIME_OFFSET = 60000;
 export const MAX_DESTINATIONS = 3;
+const MILLESECOND = 1000;
 
 export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
@@ -54,7 +55,11 @@ export const SortType = {
   PRICE: `sort-price`
 };
 export const TimeMS = {
-  IN_MINUTE: 60 * 1000,
-  IN_HOUR: 3600 * 1000,
-  IN_DAY: 24 * 3600 * 1000
+  IN_MINUTE: 60 * MILLESECOND,
+  IN_HOUR: 3600 * MILLESECOND,
+  IN_DAY: 24 * 3600 * MILLESECOND
+};
+export const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
 };

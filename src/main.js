@@ -1,7 +1,6 @@
 import {EVENTS_AMOUNT, Place} from './common/consts';
 import {render} from './common/utils/render';
 import {generateTripEvents} from './mock/event';
-import {getTripDays} from './components/main/day/utils/utils';
 import TripInfoComponent from './components/header/trip-info/trip-info';
 import MenuComponent from './components/header/menu/menu';
 import FiltersComponent from './components/header/filters/filters';
@@ -16,7 +15,6 @@ const [firstTitle, secondTitle] = tripControlsHeaders;
 
 const events = generateTripEvents(EVENTS_AMOUNT);
 events.sort((first, second) => first.startTime - second.startTime);
-const allDays = getTripDays(events);
 
 const init = () => {
   const tripController = new TripController(tripEvents);
@@ -25,7 +23,7 @@ const init = () => {
   render(firstTitle, new MenuComponent(), Place.AFTEREND);
   render(secondTitle, new FiltersComponent(), Place.AFTEREND);
 
-  tripController.render(events, allDays);
+  tripController.render(events);
 };
 
 init();
