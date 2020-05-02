@@ -1,30 +1,27 @@
-import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../../../common/consts';
-import {getFullDate} from '../../../common/utils/helpers';
+import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS, DATE_FORMAT} from '../../../common/consts';
 import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './components/event-types';
 import {createOptions} from './components/event-options';
 import {createOffer} from './components/event-selectors';
 import {createPhotos} from './components/event-photos';
 import AbstractSmartComponent from '../../abstracts/abstract-smart-component';
-import {eventPlaceholder} from '../../../mock/event';
 import {destinations} from '../../../mock/event';
 import {generateOffersByType} from '../../../mock/offer';
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.min.css";
 
 const getCheckedInput = (value) => value ? `checked` : ``;
 
 const createEventEdit = (event, options = {}) => {
-  const {startTime, endTime, price, isFavorite} = event;
+  const {price, isFavorite} = event;
   const {type, offers, destination} = options;
   const {city, description, photos} = destination;
-  const [start, end] = getEventInfo(event);
-  const eventType = eventPlaceholder[type];
+  const {start, end, startFullDate, endFullDate, eventType} = getEventInfo(event);
 
   const createOffers = () => {
     return offers.map(createOffer).join(``);
   };
-
-  const startFullDate = getFullDate(startTime);
-  const endFullDate = getFullDate(endTime);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -136,10 +133,12 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._submitHandler = null;
     this._favoriteButtonHandler = null;
+    this._flatpickr = null;
 
     this._onEventTypeChange = this._onEventTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
 
+    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -159,6 +158,8 @@ export default class EventEdit extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+
+    this._applyFlatpickr();
   }
 
   reset() {
@@ -186,6 +187,35 @@ export default class EventEdit extends AbstractSmartComponent {
     this._eventOffers = generateOffersByType(this._eventType);
 
     this.rerender();
+  }
+
+  _setFlatpickr(date) {
+    return {
+      enableTime: true,
+      dateFormat: DATE_FORMAT,
+      defaultDate: date || ``,
+    };
+  }
+
+  _getFlatpickrConfig(timeInput, date) {
+    this._flatpickr = flatpickr(timeInput, this._setFlatpickr(date));
+  }
+
+  _destroyFlatpickr() {
+    this._flatpickr.destroy();
+    this._flatpickr = null;
+  }
+
+  _applyFlatpickr() {
+    const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
+    const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
+
+    if (this._flatpickr) {
+      this._destroyFlatpickr();
+    }
+
+    this._getFlatpickrConfig(startTimeInput, this._event.startTime);
+    this._getFlatpickrConfig(endTimeInput, this._event.endTime);
   }
 
   _onDestinationChange(evt) {
