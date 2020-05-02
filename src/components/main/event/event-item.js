@@ -5,7 +5,7 @@ import AbstractComponent from '../../abstracts/abstract-component';
 const createEventItem = (event) => {
   const {type, destination, price, offers} = event;
   const {city} = destination;
-  const [start, end, , , eventType, startIsoDate, endIsoDate, timeDifference] = getEventInfo(event);
+  const {start, end, eventType, startIsoDate, endIsoDate, timeDifference} = getEventInfo(event);
 
   return (
     `<li class="trip-events__item">

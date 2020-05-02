@@ -1,4 +1,4 @@
-import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS} from '../../../common/consts';
+import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS, DATE_FORMAT} from '../../../common/consts';
 import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './components/event-types';
 import {createOptions} from './components/event-options';
@@ -17,7 +17,7 @@ const createEventEdit = (event, options = {}) => {
   const {price, isFavorite} = event;
   const {type, offers, destination} = options;
   const {city, description, photos} = destination;
-  const [start, end, startFullDate, endFullDate, eventType] = getEventInfo(event);
+  const {start, end, startFullDate, endFullDate, eventType} = getEventInfo(event);
 
   const createOffers = () => {
     return offers.map(createOffer).join(``);
@@ -189,12 +189,21 @@ export default class EventEdit extends AbstractSmartComponent {
     this.rerender();
   }
 
-  _getFlatpickrConfig(timeInput, date) {
-    this._flatpickr = flatpickr(timeInput, {
+  _setFlatpickr(date) {
+    return {
       enableTime: true,
-      dateFormat: `d/m/y H:i`,
+      dateFormat: DATE_FORMAT,
       defaultDate: date || ``,
-    });
+    };
+  }
+
+  _getFlatpickrConfig(timeInput, date) {
+    this._flatpickr = flatpickr(timeInput, this._setFlatpickr(date));
+  }
+
+  _destroyFlatpickr() {
+    this._flatpickr.destroy();
+    this._flatpickr = null;
   }
 
   _applyFlatpickr() {
@@ -202,8 +211,7 @@ export default class EventEdit extends AbstractSmartComponent {
     const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
 
     if (this._flatpickr) {
-      this._flatpickr.destroy();
-      this._flatpickr = null;
+      this._destroyFlatpickr();
     }
 
     this._getFlatpickrConfig(startTimeInput, this._event.startTime);

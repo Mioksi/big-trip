@@ -25,6 +25,8 @@ export const DESCRIPTIONS = [
 
 export const ESC_KEY = `Escape`;
 
+export const DATE_FORMAT = `d/m/y H:i`;
+
 export const Place = {
   BEFOREEND: `beforeend`,
   AFTERBEGIN: `afterbegin`,
@@ -58,4 +60,9 @@ export const TimeMS = {
 export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
+};
+export const DifferenceFormat = {
+  DAY: `D`,
+  HOUR: `H`,
+  MINUTE: `M`
 };
