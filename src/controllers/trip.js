@@ -45,10 +45,10 @@ const getSortedEvents = (events, sortType) => {
 };
 
 export default class TripController {
-  constructor(container) {
+  constructor(container, pointModel) {
     this._container = container;
+    this._pointModel = pointModel;
 
-    this._events = [];
     this._pointControllers = [];
 
     this._sortComponent = new SortComponent();
@@ -62,8 +62,8 @@ export default class TripController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
-  render(events) {
-    this._events = events;
+  render() {
+    const events = this._pointModel.getPoints();
 
     const container = this._container;
     const dayList = this._dayListComponent.getElement();
@@ -77,7 +77,7 @@ export default class TripController {
     render(container, this._sortComponent);
     render(container, this._dayListComponent);
 
-    this._renderEventsByDays(this._events, dayList);
+    this._renderEventsByDays(events, dayList);
   }
 
   _renderEventsByDays(events, dayList) {
@@ -93,7 +93,7 @@ export default class TripController {
 
       const eventList = day.querySelector(`.trip-events__list`);
 
-      const filterEvents = this._events.filter((event) => event.startTime.getDate() === dateTime.getDate());
+      const filterEvents = events.filter((event) => event.startTime.getDate() === dateTime.getDate());
 
       const newPoints = renderEvents(eventList, filterEvents, this._onDataChange, this._onViewChange);
 
@@ -114,15 +114,11 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-    const index = this._events.findIndex((it) => it === oldData);
+    const isSuccess = this._pointModel.updatePoint(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      pointController.render(newData);
     }
-
-    this._events = [].concat(this._events.slice(0, index), newData, this._events.slice(index + 1));
-
-    pointController.render(this._events[index]);
   }
 
   _onViewChange() {
@@ -130,7 +126,7 @@ export default class TripController {
   }
 
   _onSortTypeChange(sortType) {
-    const sortedEvents = getSortedEvents(this._events, sortType);
+    const sortedEvents = getSortedEvents(this._pointModel.getPoints(), sortType);
     const dayList = this._dayListComponent.getElement();
 
     dayList.innerHTML = ``;
