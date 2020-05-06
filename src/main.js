@@ -3,9 +3,9 @@ import {render} from './common/utils/render';
 import {generateTripEvents} from './mock/event';
 import TripInfoComponent from './components/header/trip-info/trip-info';
 import MenuComponent from './components/header/menu/menu';
-import FiltersComponent from './components/header/filters/filters';
 import TripController from './controllers/trip';
 import PointsModel from './models/points';
+import FilterController from './controllers/filter';
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
@@ -23,11 +23,11 @@ const init = () => {
   pointsModel.setPoints(events);
 
   const tripController = new TripController(tripEvents, pointsModel);
+  const filterController = new FilterController(secondTitle, pointsModel);
 
   render(tripMain, new TripInfoComponent(events), Place.AFTERBEGIN);
   render(firstTitle, new MenuComponent(), Place.AFTEREND);
-  render(secondTitle, new FiltersComponent(), Place.AFTEREND);
-
+  filterController.render();
   tripController.render();
 };
 

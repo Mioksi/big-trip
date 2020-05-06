@@ -22,10 +22,10 @@ export const DESCRIPTIONS = [
   `Sed sed nisi sed augue convallis suscipit in sed felis.`,
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
+export const DATE_FORMAT = `d/m/y H:i`;
+export const FILTER_ID_PREFIX = `filter-`;
 
 export const ESC_KEY = `Escape`;
-
-export const DATE_FORMAT = `d/m/y H:i`;
 
 export const Place = {
   BEFOREEND: `beforeend`,
@@ -65,4 +65,9 @@ export const DifferenceFormat = {
   DAY: `D`,
   HOUR: `H`,
   MINUTE: `M`
+};
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
 };

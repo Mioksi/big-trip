@@ -56,10 +56,12 @@ export default class TripController {
     this._noEventsComponent = new NoEventsComponent();
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._pointModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -78,6 +80,11 @@ export default class TripController {
     render(container, this._dayListComponent);
 
     this._renderEventsByDays(events, dayList);
+  }
+
+  _removeEvents() {
+    this._pointControllers.forEach((pointController) => pointController.destroy());
+    this._pointControllers = [];
   }
 
   _renderEventsByDays(events, dayList) {
@@ -113,6 +120,15 @@ export default class TripController {
     this._pointControllers = renderEvents(tripEventsList, sortedEvents, this._onDataChange, this._onViewChange);
   }
 
+  _updateEvents() {
+    const dayList = this._dayListComponent.getElement();
+
+    dayList.innerHTML = ``;
+
+    this._removeEvents();
+    this._renderEventsByDays(this._pointModel.getPoints(), dayList);
+  }
+
   _onDataChange(pointController, oldData, newData) {
     const isSuccess = this._pointModel.updatePoint(oldData.id, newData);
 
@@ -136,5 +152,9 @@ export default class TripController {
     } else {
       this._renderAllEvents(sortedEvents, dayList);
     }
+  }
+
+  _onFilterChange() {
+    this._updateEvents();
   }
 }

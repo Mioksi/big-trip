@@ -1,5 +1,5 @@
 import {ESC_KEY, Mode} from '../common/consts';
-import {render, replace} from '../common/utils/render';
+import {render, replace, remove} from '../common/utils/render';
 import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
 
@@ -48,6 +48,13 @@ export default class PointController {
     } else {
       render(this._container, this._eventItemComponent);
     }
+  }
+
+  destroy() {
+    remove(this._eventEditComponent);
+    remove(this._eventItemComponent);
+
+    document.removeEventListener(`keydown`, this._onFormEscPress);
   }
 
   setDefaultView() {
