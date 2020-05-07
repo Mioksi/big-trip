@@ -11,11 +11,11 @@ const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
 const tripControlsHeaders = tripControls.querySelectorAll(`h2`);
 const tripEvents = document.querySelector(`.trip-events`);
+const eventAddButton = tripMain.querySelector(`.trip-main__event-add-btn`);
 
 const [firstTitle, secondTitle] = tripControlsHeaders;
 
 const events = generateTripEvents(EVENTS_AMOUNT);
-events.sort((first, second) => first.startTime - second.startTime);
 
 const init = () => {
   const pointsModel = new PointsModel();
@@ -29,6 +29,10 @@ const init = () => {
   render(firstTitle, new MenuComponent(), Place.AFTEREND);
   filterController.render();
   tripController.render();
+
+  eventAddButton.addEventListener(`click`, () => {
+    tripController.createPoint();
+  });
 };
 
 init();

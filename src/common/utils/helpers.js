@@ -38,3 +38,5 @@ export const getNewDate = () => {
 export const getRandomDate = (startDate, endDate) => {
   return new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
 };
+
+export const getDefaultSortedEvents = (events) => events.sort((first, second) => first.startTime - second.startTime);

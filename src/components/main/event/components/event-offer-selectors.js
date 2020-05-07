@@ -2,7 +2,7 @@ import {getBoolean} from '../../../../common/utils/helpers';
 
 const getCheckedFilter = () => getBoolean() ? `checked` : ``;
 
-const createOffer = (offer) => {
+const createOfferSelector = (offer) => {
   const {type, name, price} = offer;
 
   return (
@@ -22,4 +22,6 @@ const createOffer = (offer) => {
   );
 };
 
-export {createOffer};
+const createOfferSelectors = (offers) => offers.map(createOfferSelector).join(``);
+
+export {createOfferSelectors};

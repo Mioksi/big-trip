@@ -58,6 +58,7 @@ export const TimeMS = {
   IN_DAY: 24 * 3600 * MILLISECOND
 };
 export const Mode = {
+  ADDING: `adding`,
   DEFAULT: `default`,
   EDIT: `edit`,
 };
@@ -70,4 +71,19 @@ export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`
+};
+export const EmptyPoint = {
+  type: `taxi`,
+  destination: {
+    city: ``
+  },
+  startTime: null,
+  endTime: null,
+  offers: [],
+  price: 0,
+  isFavorite: false,
+};
+export const ButtonText = {
+  cancel: `Cancel`,
+  delete: `Delete`,
 };
