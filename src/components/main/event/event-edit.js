@@ -8,14 +8,18 @@ import AbstractSmartComponent from '../../abstracts/abstract-smart-component';
 import {destinations, eventPlaceholder} from '../../../mock/event';
 import {generateOffersByType} from '../../../mock/offer';
 import flatpickr from "flatpickr";
+import {encode} from "he";
 
 import "flatpickr/dist/flatpickr.min.css";
 
 const createEventEdit = (event, mode, options = {}) => {
-  const {price, isFavorite} = event;
+  const {price: notSanitizedPrice, isFavorite} = event;
   const {type, offers, destination} = options;
-  const {city, description, photos} = destination;
+  const {city: notSanitizedCity, description, photos} = destination;
   const {start, end, startFullDate, endFullDate} = getEventInfo(event);
+
+  const city = encode(notSanitizedCity);
+  const price = encode(notSanitizedPrice.toString());
 
   const eventType = eventPlaceholder[type];
   const textButton = (mode === Mode.ADDING ? ButtonText.cancel : ButtonText.delete);
@@ -114,14 +118,14 @@ const parseFormData = (formData) => {
   return {
     type: formData.get(`event-type`),
     destination: {
-      city: formData.get(`event-destination`),
+      city: encode(formData.get(`event-destination`)),
       description,
       photos
     },
     startTime: startTime ? new Date(startTime) : null,
     endTime: endTime ? new Date(endTime) : null,
     offers,
-    price: formData.get(`event-price`),
+    price: parseInt(encode(formData.get(`event-price`)), 10),
   };
 };
 
