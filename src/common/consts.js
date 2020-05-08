@@ -5,6 +5,8 @@ export const MAX_DAYS = 14;
 export const MAX_OFFERS = 5;
 export const MAX_DESTINATIONS = 3;
 const MILLISECOND = 1000;
+const SECONDS_IN_HOUR = 3600;
+const HOURS_IN_DAY = 24;
 
 export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
@@ -22,68 +24,85 @@ export const DESCRIPTIONS = [
   `Sed sed nisi sed augue convallis suscipit in sed felis.`,
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
-export const DATE_FORMAT = `d/m/y H:i`;
+
 export const FILTER_ID_PREFIX = `filter-`;
 
 export const ESC_KEY = `Escape`;
+
+export const emptyPoint = {
+  id: ``,
+  type: `taxi`,
+  destination: {
+    city: ``
+  },
+  startTime: new Date(),
+  endTime: new Date(),
+  offers: [],
+  price: 0,
+  isFavorite: false,
+};
 
 export const Place = {
   BEFOREEND: `beforeend`,
   AFTERBEGIN: `afterbegin`,
   AFTEREND: `afterend`
 };
+
 export const Sign = {
   NEGATIVE: -1,
   POSITIVE: 1
 };
+
 export const Price = {
   MIN: 1,
   MAX: 1000
 };
+
 export const Description = {
   MIN: 1,
   MAX: 5
 };
+
 export const Photos = {
   MIN: 1,
   MAX: 5
 };
+
 export const SortType = {
   EVENT: `sort-event`,
   TIME: `sort-time`,
   PRICE: `sort-price`
 };
+
 export const TimeMS = {
-  IN_HOUR: 3600 * MILLISECOND,
-  IN_DAY: 24 * 3600 * MILLISECOND
+  IN_HOUR: SECONDS_IN_HOUR * MILLISECOND,
+  IN_DAY: HOURS_IN_DAY * SECONDS_IN_HOUR * MILLISECOND
 };
+
 export const Mode = {
   ADDING: `adding`,
   DEFAULT: `default`,
   EDIT: `edit`,
 };
+
 export const DifferenceFormat = {
   DAY: `D`,
   HOUR: `H`,
   MINUTE: `M`
 };
+
 export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`
 };
-export const EmptyPoint = {
-  type: `taxi`,
-  destination: {
-    city: ``
-  },
-  startTime: null,
-  endTime: null,
-  offers: [],
-  price: 0,
-  isFavorite: false,
-};
+
 export const ButtonText = {
-  cancel: `Cancel`,
-  delete: `Delete`,
+  CANCEL: `Cancel`,
+  DELETE: `Delete`,
+};
+
+export const FormatDate = {
+  DEFAULT: `d/m/y H:i`,
+  ISO: `Z`
 };

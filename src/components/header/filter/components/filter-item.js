@@ -1,7 +1,7 @@
-const getCheckedFilter = (isChecked) => isChecked ? `checked` : ``;
+const isCheckedFilter = (checked) => checked ? `checked` : ``;
 
-const createFilter = (filter, isChecked) => {
-  const {name} = filter;
+const createFilter = (filter) => {
+  const {name, checked} = filter;
 
   return (
     `<div class="trip-filters__filter">
@@ -10,7 +10,7 @@ const createFilter = (filter, isChecked) => {
         type="radio"
         name="trip-filter"
         value="${name}"
-        ${getCheckedFilter(isChecked)}
+        ${isCheckedFilter(checked)}
       >
       <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>
     </div>`

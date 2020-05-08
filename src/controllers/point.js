@@ -1,4 +1,4 @@
-import {ESC_KEY, Mode, EmptyPoint, Place} from '../common/consts';
+import {ESC_KEY, Mode, emptyPoint, Place} from '../common/consts';
 import {render, replace, remove} from '../common/utils/render';
 import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
@@ -120,7 +120,7 @@ export default class PointController {
 
   _onFormEscPress(evt) {
     if (evt.key === ESC_KEY || evt.key === ESC_KEY && this._mode === Mode.ADDING) {
-      this._onDataChange(this, EmptyPoint, null);
+      this._onDataChange(this, emptyPoint, null);
 
       this._replaceEditToEvent();
 

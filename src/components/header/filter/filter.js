@@ -5,7 +5,7 @@ import AbstractComponent from '../../abstracts/abstract-component';
 const getFilterNameById = (id) => id.substring(FILTER_ID_PREFIX.length);
 
 const createFilters = (filters) => {
-  const filtersMarkup = filters.map((filter) => createFilter(filter, filter.checked)).join(``);
+  const filtersMarkup = filters.map(createFilter).join(``);
 
   return (
     `<form class="trip-filters" action="#" method="get">

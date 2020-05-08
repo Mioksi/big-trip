@@ -1,4 +1,4 @@
-import {SortType, Mode, EmptyPoint} from '../common/consts';
+import {SortType, Mode, emptyPoint} from '../common/consts';
 import {render} from '../common/utils/render';
 import {getDefaultSortedEvents} from '../common/utils/helpers';
 import {getTripDays} from '../components/main/day/utils/utils';
@@ -93,7 +93,7 @@ export default class TripController {
 
     this._creatingPoint = new PointController(dayList, this._onDataChange, this._onViewChange);
 
-    this._creatingPoint.render(EmptyPoint, Mode.ADDING);
+    this._creatingPoint.render(emptyPoint, Mode.ADDING);
     this._pointControllers = this._pointControllers.concat(this._creatingPoint);
   }
 
@@ -146,7 +146,7 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-    if (oldData === EmptyPoint) {
+    if (oldData.id === emptyPoint.id) {
       this._creatingPoint = null;
 
       if (newData === null) {

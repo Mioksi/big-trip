@@ -1,3 +1,5 @@
+const getEverythingPoints = (points) => points;
+
 const getFuturePoint = (point, date) => {
   const startDate = point.startTime;
 
@@ -15,9 +17,9 @@ const getPastPoint = (point, date) => {
 const getPastPoints = (points, date) => points.filter((point) => getPastPoint(point, date));
 
 const filterTypes = {
-  'everything': (points) => points,
-  'future': (points, nowDate) => getFuturePoints(points, nowDate),
-  'past': (points, nowDate) => getPastPoints(points, nowDate)
+  'everything': getEverythingPoints,
+  'future': getFuturePoints,
+  'past': getPastPoints
 };
 
 export const getPointsByFilter = (points, filterType) => {

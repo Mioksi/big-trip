@@ -1,4 +1,5 @@
-import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS, DATE_FORMAT, Mode, ButtonText} from '../../../common/consts';
+import {EVENT_TYPES_TO, EVENT_TYPES_IN, DESTINATIONS, FormatDate, Mode, ButtonText} from '../../../common/consts';
+import {getRandomNumber} from '../../../common/utils/helpers';
 import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './components/event-types';
 import {createOptions} from './components/event-options';
@@ -22,7 +23,7 @@ const createEventEdit = (event, mode, options = {}) => {
   const price = encode(notSanitizedPrice.toString());
 
   const eventType = eventPlaceholder[type];
-  const textButton = (mode === Mode.ADDING ? ButtonText.cancel : ButtonText.delete);
+  const textButton = (mode === Mode.ADDING ? ButtonText.CANCEL : ButtonText.DELETE);
   const additionalButtons = mode === Mode.ADDING ? `` : createAdditionalButtons(isFavorite);
   const getEventDetails = (type && city) ? createEventDetails(offers, description, photos) : ``;
 
@@ -116,6 +117,7 @@ const parseFormData = (formData) => {
   });
 
   return {
+    id: String(getRandomNumber(100)),
     type: formData.get(`event-type`),
     destination: {
       city: encode(formData.get(`event-destination`)),
@@ -240,9 +242,10 @@ export default class EventEdit extends AbstractSmartComponent {
   _setFlatpickr(date) {
     return {
       'altInput': true,
+      'allowInput': true,
       'enableTime': true,
-      'dateFormat': `Z`,
-      'altFormat': DATE_FORMAT,
+      'dateFormat': FormatDate.ISO,
+      'altFormat': FormatDate.DEFAULT,
       'time_24hr': true,
       'defaultDate': date || ``,
     };
