@@ -1,5 +1,5 @@
-import {ESC_KEY, Mode} from '../common/consts';
-import {render, replace} from '../common/utils/render';
+import {ESC_KEY, Mode, emptyPoint, Place} from '../common/consts';
+import {render, replace, remove} from '../common/utils/render';
 import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
 
@@ -17,13 +17,38 @@ export default class PointController {
     this._onFormEscPress = this._onFormEscPress.bind(this);
   }
 
-  render(event) {
+  render(event, mode) {
     const oldEventItemComponent = this._eventItemComponent;
     const oldEventEditComponent = this._eventEditComponent;
+    const modeTypes = {
+      [Mode.DEFAULT]: () => this._renderEvent(oldEventEditComponent, oldEventItemComponent),
+      [Mode.ADDING]: () => this._renderNewEvent(oldEventEditComponent, oldEventItemComponent)
+    };
+
+    this._mode = mode;
 
     this._eventItemComponent = new EventItemComponent(event);
-    this._eventEditComponent = new EventEditComponent(event);
+    this._eventEditComponent = new EventEditComponent(event, mode);
 
+    this._addHandlers(event);
+
+    modeTypes[mode]();
+  }
+
+  destroy() {
+    remove(this._eventEditComponent);
+    remove(this._eventItemComponent);
+
+    document.removeEventListener(`keydown`, this._onFormEscPress);
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditToEvent();
+    }
+  }
+
+  _addHandlers(event) {
     this._eventItemComponent.setRollupButtonClickHandler(() => {
       this._replaceEventToEdit();
 
@@ -33,8 +58,12 @@ export default class PointController {
     this._eventEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
 
-      this._replaceEditToEvent();
+      const data = this._eventEditComponent.getData();
+
+      this._onDataChange(this, event, data);
     });
+
+    this._eventEditComponent.setDeleteButtonClickHandler(() => this._onDataChange(this, event, null));
 
     this._eventEditComponent.setFavoriteButtonHandler(() => {
       this._onDataChange(this, event, Object.assign({}, event, {
@@ -42,18 +71,31 @@ export default class PointController {
       }));
     });
 
+    this._eventEditComponent.setRollupButtonHandler(() => {
+      this._replaceEditToEvent();
+    });
+  }
+
+  _renderEvent(oldEventEditComponent, oldEventItemComponent) {
     if (oldEventEditComponent && oldEventItemComponent) {
       replace(this._eventItemComponent, oldEventItemComponent);
       replace(this._eventEditComponent, oldEventEditComponent);
+
+      this._replaceEditToEvent();
     } else {
       render(this._container, this._eventItemComponent);
     }
   }
 
-  setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._replaceEditToEvent();
+  _renderNewEvent(oldEventEditComponent, oldEventItemComponent) {
+    if (oldEventEditComponent && oldEventItemComponent) {
+      remove(oldEventItemComponent);
+      remove(oldEventEditComponent);
     }
+
+    render(this._container, this._eventEditComponent, Place.AFTERBEGIN);
+
+    document.addEventListener(`keydown`, this._onFormEscPress);
   }
 
   _replaceEditToEvent() {
@@ -61,7 +103,9 @@ export default class PointController {
 
     this._mode = Mode.DEFAULT;
 
-    replace(this._eventItemComponent, this._eventEditComponent);
+    if (document.contains(this._eventEditComponent.getElement())) {
+      replace(this._eventItemComponent, this._eventEditComponent);
+    }
 
     document.removeEventListener(`keydown`, this._onFormEscPress);
   }
@@ -75,7 +119,9 @@ export default class PointController {
   }
 
   _onFormEscPress(evt) {
-    if (evt.key === ESC_KEY) {
+    if (evt.key === ESC_KEY || evt.key === ESC_KEY && this._mode === Mode.ADDING) {
+      this._onDataChange(this, emptyPoint, null);
+
       this._replaceEditToEvent();
 
       document.removeEventListener(`keydown`, this._onFormEscPress);

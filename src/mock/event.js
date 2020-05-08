@@ -47,6 +47,7 @@ const generateTripEvent = () => {
   const generateOffers = () => currentOffers.filter(() => getBoolean()).slice(0, MAX_OFFERS);
 
   return {
+    id: String(getRandomNumber(100)),
     type,
     startTime,
     endTime,
