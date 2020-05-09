@@ -26,6 +26,7 @@ export const DESCRIPTIONS = [
 ];
 
 export const FILTER_ID_PREFIX = `filter-`;
+export const HIDDEN_CLASS = `visually-hidden`;
 
 export const ESC_KEY = `Escape`;
 
