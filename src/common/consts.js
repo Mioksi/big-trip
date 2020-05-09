@@ -107,3 +107,8 @@ export const FormatDate = {
   DEFAULT: `d/m/y H:i`,
   ISO: `Z`
 };
+
+export const MenuItem = {
+  TABLE: `Table`,
+  STATS: `Stats`,
+};
