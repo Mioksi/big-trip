@@ -4,6 +4,7 @@ export const MAX_MINUTES = 59;
 export const MAX_DAYS = 14;
 export const MAX_OFFERS = 5;
 export const MAX_DESTINATIONS = 3;
+export const BAR_HEIGHT = 55;
 const MILLISECOND = 1000;
 const SECONDS_IN_HOUR = 3600;
 const HOURS_IN_DAY = 24;
@@ -11,7 +12,7 @@ const HOURS_IN_DAY = 24;
 export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
 export const EVENT_TYPES_IN = [`check-in`, `sightseeing`, `restaurant`];
-export const EVENT_TYPES = [...EVENT_TYPES_IN, ...EVENT_TYPES_TO];
+export const EVENT_TYPES = [...EVENT_TYPES_TO, ...EVENT_TYPES_IN];
 export const DESTINATIONS = [`Amsterdam`, `Chamonix`, `Geneva`, `Moscow`, `Saint Petersburg`, `Canberra`];
 export const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -111,4 +112,17 @@ export const FormatDate = {
 export const MenuItem = {
   TABLE: `Table`,
   STATS: `Stats`,
+};
+
+export const iconMap = {
+  'taxi': `🚕`,
+  'bus': `🚌`,
+  'train': `🚂`,
+  'ship': `🚢`,
+  'transport': `🚊`,
+  'drive': `🚗`,
+  'flight': `✈️`,
+  'check-in': `🏨`,
+  'sightseeing': `🏛️`,
+  'restaurant': `🍽️`
 };
