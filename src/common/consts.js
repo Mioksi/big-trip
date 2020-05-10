@@ -118,11 +118,11 @@ export const iconMap = {
   'taxi': `🚕`,
   'bus': `🚌`,
   'train': `🚂`,
-  'ship': `🚢`,
+  'ship': `🛳`,
   'transport': `🚊`,
   'drive': `🚗`,
   'flight': `✈️`,
   'check-in': `🏨`,
   'sightseeing': `🏛️`,
-  'restaurant': `🍽️`
+  'restaurant': `🍴`
 };
