@@ -1,8 +1,9 @@
-import {EVENTS_AMOUNT, Place} from './common/consts';
+import {EVENTS_AMOUNT, Place, MenuItem} from './common/consts';
 import {render} from './common/utils/render';
 import {generateTripEvents} from './mock/event';
 import TripInfoComponent from './components/header/trip-info/trip-info';
 import MenuComponent from './components/header/menu/menu';
+import StatisticsComponent from './components/header/statistics/statistics';
 import TripController from './controllers/trip';
 import PointsModel from './models/points';
 import FilterController from './controllers/filter';
@@ -22,13 +23,37 @@ const init = () => {
 
   pointsModel.setPoints(events);
 
+  const menuComponent = new MenuComponent();
+  const statisticsComponent = new StatisticsComponent(pointsModel);
   const tripController = new TripController(tripEvents, pointsModel);
   const filterController = new FilterController(secondTitle, pointsModel);
 
+  const showTable = () => {
+    menuComponent.setActiveItem(MenuItem.TABLE);
+    statisticsComponent.hide();
+    tripController.show();
+  };
+
+  const showStats = () => {
+    menuComponent.setActiveItem(MenuItem.STATS);
+    tripController.hide();
+    statisticsComponent.show();
+  };
+
+  const menuTab = {
+    'Table': showTable,
+    'Stats': showStats,
+  };
+
   render(tripMain, new TripInfoComponent(events), Place.AFTERBEGIN);
-  render(firstTitle, new MenuComponent(), Place.AFTEREND);
+  render(firstTitle, menuComponent, Place.AFTEREND);
   filterController.render();
   tripController.render();
+
+  render(tripEvents, statisticsComponent);
+  statisticsComponent.hide();
+
+  menuComponent.setMenuItemChangeHandler((menuItem) => menuTab[menuItem]());
 
   eventAddButton.addEventListener(`click`, () => {
     tripController.createPoint();
