@@ -28,6 +28,23 @@ const init = () => {
   const tripController = new TripController(tripEvents, pointsModel);
   const filterController = new FilterController(secondTitle, pointsModel);
 
+  const showTable = () => {
+    menuComponent.setActiveItem(MenuItem.TABLE);
+    statisticsComponent.hide();
+    tripController.show();
+  };
+
+  const showStats = () => {
+    menuComponent.setActiveItem(MenuItem.STATS);
+    tripController.hide();
+    statisticsComponent.show();
+  };
+
+  const menuTab = {
+    'Table': showTable,
+    'Stats': showStats,
+  };
+
   render(tripMain, new TripInfoComponent(events), Place.AFTERBEGIN);
   render(firstTitle, menuComponent, Place.AFTEREND);
   filterController.render();
@@ -36,20 +53,7 @@ const init = () => {
   render(tripEvents, statisticsComponent);
   statisticsComponent.hide();
 
-  menuComponent.setMenuItemChangeHandler((menuItem) => {
-    switch (menuItem) {
-      case MenuItem.TABLE:
-        menuComponent.setActiveItem(MenuItem.TABLE);
-        statisticsComponent.hide();
-        tripController.show();
-        break;
-      case MenuItem.STATS:
-        menuComponent.setActiveItem(MenuItem.STATS);
-        tripController.hide();
-        statisticsComponent.show();
-        break;
-    }
-  });
+  menuComponent.setMenuItemChangeHandler((menuItem) => menuTab[menuItem]());
 
   eventAddButton.addEventListener(`click`, () => {
     tripController.createPoint();
