@@ -1,4 +1,3 @@
-export const EVENTS_AMOUNT = 20;
 export const MAX_HOURS = 23;
 export const MAX_MINUTES = 59;
 export const MAX_DAYS = 14;
@@ -26,6 +25,9 @@ export const DESCRIPTIONS = [
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
 
+export const AUTHORIZATION = `Basic beaAeswIQoYdzd5`;
+export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
+
 export const FILTER_ID_PREFIX = `filter-`;
 export const HIDDEN_CLASS = `visually-hidden`;
 
@@ -42,6 +44,19 @@ export const emptyPoint = {
   offers: [],
   price: 0,
   isFavorite: false,
+};
+
+export const iconMap = {
+  'taxi': `🚕`,
+  'bus': `🚌`,
+  'train': `🚂`,
+  'ship': `🛳`,
+  'transport': `🚊`,
+  'drive': `🚗`,
+  'flight': `✈️`,
+  'check-in': `🏨`,
+  'sightseeing': `🏛️`,
+  'restaurant': `🍴`
 };
 
 export const Place = {
@@ -114,15 +129,9 @@ export const MenuItem = {
   STATS: `Stats`,
 };
 
-export const iconMap = {
-  'taxi': `🚕`,
-  'bus': `🚌`,
-  'train': `🚂`,
-  'ship': `🛳`,
-  'transport': `🚊`,
-  'drive': `🚗`,
-  'flight': `✈️`,
-  'check-in': `🏨`,
-  'sightseeing': `🏛️`,
-  'restaurant': `🍴`
+export const Method = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
 };

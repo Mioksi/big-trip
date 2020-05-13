@@ -1,12 +1,12 @@
-import {EVENTS_AMOUNT, Place, MenuItem} from './common/consts';
-import {render} from './common/utils/render';
-import {generateTripEvents} from './mock/event';
-import TripInfoComponent from './components/header/trip-info/trip-info';
+import API from './api/api';
+import FilterController from './controllers/filter';
 import MenuComponent from './components/header/menu/menu';
+import PointsModel from './models/points';
 import StatisticsComponent from './components/header/statistics/statistics';
 import TripController from './controllers/trip';
-import PointsModel from './models/points';
-import FilterController from './controllers/filter';
+import TripInfoComponent from './components/header/trip-info/trip-info';
+import {AUTHORIZATION, END_POINT, Place, MenuItem} from './common/consts';
+import {render} from './common/utils/render';
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
@@ -16,12 +16,9 @@ const eventAddButton = tripMain.querySelector(`.trip-main__event-add-btn`);
 
 const [firstTitle, secondTitle] = tripControlsHeaders;
 
-const events = generateTripEvents(EVENTS_AMOUNT);
-
 const init = () => {
+  const api = new API(END_POINT, AUTHORIZATION);
   const pointsModel = new PointsModel();
-
-  pointsModel.setPoints(events);
 
   const menuComponent = new MenuComponent();
   const statisticsComponent = new StatisticsComponent(pointsModel);
@@ -45,7 +42,6 @@ const init = () => {
     'Stats': showStats,
   };
 
-  render(tripMain, new TripInfoComponent(events), Place.AFTERBEGIN);
   render(firstTitle, menuComponent, Place.AFTEREND);
   filterController.render();
   tripController.render();
@@ -58,6 +54,13 @@ const init = () => {
   eventAddButton.addEventListener(`click`, () => {
     tripController.createPoint();
   });
+
+  Promise.all([api.getPoints()])
+    .then(([points]) => {
+      pointsModel.setPoints(points);
+      render(tripMain, new TripInfoComponent(points), Place.AFTERBEGIN);
+      tripController.render();
+    });
 };
 
 init();
