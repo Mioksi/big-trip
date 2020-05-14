@@ -1,3 +1,4 @@
+import Point from '../models/point';
 import {Method} from '../common/consts';
 
 const API = class {
@@ -6,9 +7,20 @@ const API = class {
     this._authorization = authorization;
   }
 
+  getDestinations() {
+    return this._load({url: `destinations`})
+      .then((response) => response.json());
+  }
+
+  getOffers() {
+    return this._load({url: `offers`})
+      .then((response) => response.json());
+  }
+
   getPoints() {
     return this._load({url: `points`})
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then(Point.parsePoints);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

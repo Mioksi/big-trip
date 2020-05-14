@@ -1,6 +1,6 @@
 import {TimeMS, DifferenceFormat} from '../../../../common/consts';
 import {formatTime, formatDate, getIsoDate} from '../../../../common/utils/helpers';
-import {eventPlaceholder} from '../../../../mock/event';
+import {eventPlaceholder} from '../../../../common/consts';
 import moment from "moment";
 
 const calculateTimeDifference = (start, end) => {

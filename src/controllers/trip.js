@@ -8,9 +8,9 @@ import SortComponent from '../components/main/sorting/sort';
 import DayListComponent from '../components/main/day/day-list';
 import PointController from './point';
 
-const renderEvents = (tripEventsList, events, onDataChange, onViewChange) => {
+const renderEvents = (tripEventsList, events, onDataChange, onViewChange, offers, destinations) => {
   return events.map((event) => {
-    const pointController = new PointController(tripEventsList, onDataChange, onViewChange);
+    const pointController = new PointController(tripEventsList, onDataChange, onViewChange, offers, destinations);
 
     pointController.render(event, Mode.DEFAULT);
 
@@ -54,7 +54,7 @@ export default class TripController {
 
     this._sortComponent = new SortComponent();
     this._dayListComponent = new DayListComponent();
-    this._noEventsComponent = new NoEventsComponent();
+    // this._noEventsComponent = new NoEventsComponent();
     this._creatingPoint = null;
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
@@ -82,11 +82,11 @@ export default class TripController {
     const container = this._container;
     const dayList = this._dayListComponent.getElement();
 
-    if (events.length === 0) {
-      render(container, this._noEventsComponent);
-
-      return;
-    }
+    // if (events.length === 0) {
+    //   render(container, this._noEventsComponent);
+    //
+    //   return;
+    // }
 
     render(container, this._sortComponent);
     render(container, this._dayListComponent);
@@ -100,8 +100,10 @@ export default class TripController {
     }
 
     const dayList = this._dayListComponent.getElement();
+    const destinations = this._pointModel.getDestinations();
+    const offers = this._pointModel.getOffers();
 
-    this._creatingPoint = new PointController(dayList, this._onDataChange, this._onViewChange);
+    this._creatingPoint = new PointController(dayList, this._onDataChange, this._onViewChange, destinations, offers);
 
     this._creatingPoint.render(emptyPoint, Mode.ADDING);
     this._pointControllers = this._pointControllers.concat(this._creatingPoint);
@@ -115,6 +117,8 @@ export default class TripController {
   _renderEventsByDays(events, dayList) {
     const sortedEvents = getDefaultSortedEvents(events);
     const allDays = getTripDays(sortedEvents);
+    const destinations = this._pointModel.getDestinations();
+    const offers = this._pointModel.getOffers();
 
     allDays.map((day, index) => renderDay(dayList, day, index + 1));
 
@@ -128,7 +132,7 @@ export default class TripController {
 
       const filterEvents = sortedEvents.filter((event) => event.startTime.getDate() === dateTime.getDate());
 
-      const newPoints = renderEvents(eventList, filterEvents, this._onDataChange, this._onViewChange);
+      const newPoints = renderEvents(eventList, filterEvents, this._onDataChange, this._onViewChange, destinations, offers);
 
       this._pointControllers = this._pointControllers.concat(newPoints);
     };
@@ -138,12 +142,14 @@ export default class TripController {
 
   _renderAllEvents(sortedEvents, dayList) {
     const day = new DayItemComponent(null);
+    const destinations = this._pointModel.getDestinations();
+    const offers = this._pointModel.getOffers();
 
     render(dayList, day);
 
     const tripEventsList = day.getElement().querySelector(`.trip-events__list`);
 
-    this._pointControllers = renderEvents(tripEventsList, sortedEvents, this._onDataChange, this._onViewChange);
+    this._pointControllers = renderEvents(tripEventsList, sortedEvents, this._onDataChange, this._onViewChange, destinations, offers);
   }
 
   _updateEvents() {

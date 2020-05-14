@@ -55,9 +55,11 @@ const init = () => {
     tripController.createPoint();
   });
 
-  Promise.all([api.getPoints()])
-    .then(([points]) => {
+  Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
+    .then(([points, offers, destinations]) => {
       pointsModel.setPoints(points);
+      pointsModel.setOffers(offers);
+      pointsModel.setDestinations(destinations);
       render(tripMain, new TripInfoComponent(points), Place.AFTERBEGIN);
       tripController.render();
     });

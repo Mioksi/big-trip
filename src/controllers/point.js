@@ -4,12 +4,15 @@ import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
 
 export default class PointController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, offers, destinations) {
     this._mode = Mode.DEFAULT;
 
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+
+    this._offers = offers;
+    this._destinations = destinations;
 
     this._eventItemComponent = null;
     this._eventEditComponent = null;
@@ -28,7 +31,7 @@ export default class PointController {
     this._mode = mode;
 
     this._eventItemComponent = new EventItemComponent(event);
-    this._eventEditComponent = new EventEditComponent(event, mode);
+    this._eventEditComponent = new EventEditComponent(event, mode, this._offers, this._destinations);
 
     this._addHandlers(event);
 
