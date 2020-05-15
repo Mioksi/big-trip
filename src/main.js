@@ -22,7 +22,7 @@ const init = () => {
 
   const menuComponent = new MenuComponent();
   const statisticsComponent = new StatisticsComponent(pointsModel);
-  const tripController = new TripController(tripEvents, pointsModel);
+  const tripController = new TripController(tripEvents, pointsModel, api);
   const filterController = new FilterController(secondTitle, pointsModel);
 
   const showTable = () => {

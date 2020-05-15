@@ -3,7 +3,7 @@ import {render} from '../common/utils/render';
 import {getDefaultSortedEvents} from '../common/utils/helpers';
 import {getTripDays} from '../components/main/day/utils/utils';
 import DayItemComponent from '../components/main/day/day-item';
-import NoEventsComponent from '../components/main/event/no-events';
+// import NoEventsComponent from '../components/main/event/no-events';
 import SortComponent from '../components/main/sorting/sort';
 import DayListComponent from '../components/main/day/day-list';
 import PointController from './point';
@@ -46,9 +46,10 @@ const getSortedEvents = (events, sortType) => {
 };
 
 export default class TripController {
-  constructor(container, pointModel) {
+  constructor(container, pointModel, api) {
     this._container = container;
     this._pointModel = pointModel;
+    this._api = api;
 
     this._pointControllers = [];
 
@@ -178,11 +179,15 @@ export default class TripController {
       this._pointModel.removePoint(oldData.id);
       this._updateEvents();
     } else {
-      const isSuccess = this._pointModel.updatePoint(oldData.id, newData);
+      this._api.updatePoint(oldData.id, newData)
+        .then((pointModel) => {
+          const isSuccess = this._pointModel.updatePoint(oldData.id, pointModel);
 
-      if (isSuccess) {
-        pointController.render(newData, Mode.DEFAULT);
-      }
+          if (isSuccess) {
+            pointController.render(pointModel, Mode.DEFAULT);
+            this._updateEvents();
+          }
+        });
     }
   }
 

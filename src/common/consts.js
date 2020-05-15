@@ -114,3 +114,8 @@ export const Method = {
   PUT: `PUT`,
   DELETE: `DELETE`,
 };
+
+export const StatusCode = {
+  SUCCESS: 200,
+  REDIRECT: 300,
+};

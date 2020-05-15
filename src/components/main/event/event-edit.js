@@ -1,5 +1,5 @@
 import {EVENT_TYPES_TO, EVENT_TYPES_IN, FormatDate, Mode, ButtonText, eventPlaceholder} from '../../../common/consts';
-import {getRandomNumber} from '../../../common/utils/helpers';
+import {getOffersByType} from '../../../common/utils/helpers';
 import {getEventInfo} from './common/event-info';
 import {createTransferItems, createActivityItems} from './components/event-types';
 import {createOptions} from './components/event-options';
@@ -101,38 +101,8 @@ const createEventEdit = (event, mode, options = {}) => {
   );
 };
 
-const parseFormData = (formData) => {
-  const startTime = formData.get(`event-start-time`);
-  const endTime = formData.get(`event-end-time`);
-  const description = document.querySelector(`.event__destination-description`).textContent;
-  let pictures = [...document.querySelectorAll(`.event__photo`)];
-  let offers = [...document.querySelectorAll(`.event__offer-selector`)];
-
-  pictures = pictures.map((photo) => photo.src);
-  offers = offers.map((offer) => {
-    return {
-      name: offer.querySelector(`.event__offer-title`).textContent,
-      price: offer.querySelector(`.event__offer-price`).textContent
-    };
-  });
-
-  return {
-    id: String(getRandomNumber(100)),
-    type: formData.get(`event-type`),
-    destination: {
-      name: encode(formData.get(`event-destination`)),
-      description,
-      pictures
-    },
-    startTime: startTime ? new Date(startTime) : null,
-    endTime: endTime ? new Date(endTime) : null,
-    offers,
-    price: parseInt(encode(formData.get(`event-price`)), 10),
-  };
-};
-
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(event, mode, destinations, offers) {
+  constructor(event, mode, offers, destinations) {
     super();
 
     this._event = event;
@@ -142,7 +112,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._allOffers = offers;
     this._allDestinations = destinations;
-    this._offersByType = this._getOffersByType(this._allOffers, this._eventType);
+    this._offersByType = getOffersByType(this._allOffers, this._eventType);
 
     this._mode = mode;
 
@@ -203,15 +173,8 @@ export default class EventEdit extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement();
-    const formData = new FormData(form);
 
-    return parseFormData(formData);
-  }
-
-  _getOffersByType() {
-    const index = this._allOffers.findIndex((offer) => offer.type === this._eventType);
-
-    return this._allOffers[index].offers;
+    return new FormData(form);
   }
 
   setSubmitHandler(handler) {
@@ -247,7 +210,7 @@ export default class EventEdit extends AbstractSmartComponent {
   _onEventTypeChange(evt) {
     this._eventType = evt.target.value;
 
-    this._offersByType = this._getOffersByType();
+    this._offersByType = getOffersByType(this._allOffers, this._eventType);
 
     this.rerender();
   }

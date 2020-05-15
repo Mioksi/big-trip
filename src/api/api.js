@@ -1,5 +1,13 @@
 import Point from '../models/point';
-import {Method} from '../common/consts';
+import {Method, StatusCode} from '../common/consts';
+
+const checkStatus = (response) => {
+  if (response.status >= StatusCode.SUCCESS && response.status < StatusCode.REDIRECT) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
 
 const API = class {
   constructor(endPoint, authorization) {
@@ -23,10 +31,22 @@ const API = class {
       .then(Point.parsePoints);
   }
 
+  updatePoint(id, data) {
+    return this._load({
+      url: `points/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data.toRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .then(Point.parsePoint);
+  }
+
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+      .then(checkStatus)
       .catch((err) => {
         throw err;
       });

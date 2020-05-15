@@ -1,10 +1,49 @@
 import {ESC_KEY, Mode, emptyPoint, Place} from '../common/consts';
+import {getOffersByType} from '../common/utils/helpers';
 import {render, replace, remove} from '../common/utils/render';
 import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
+import PointModel from '../models/point';
+import {encode} from 'he';
+
+const parseFormData = (formData, id, destinations, offers) => {
+  const type = formData.get(`event-type`);
+  const city = encode(formData.get(`event-destination`));
+  const startTime = formData.get(`event-start-time`);
+  const endTime = formData.get(`event-end-time`);
+  const eventOffers = formData.getAll(`event-offer`);
+  const isFavorite = formData.get(`event-favorite`);
+
+  const destination = destinations.find((item) => {
+    return city === item.name;
+  });
+
+  const offersByType = getOffersByType(offers, type);
+  const checkedOffers = offersByType.filter((offer) => eventOffers.includes(offer.title));
+
+  return new PointModel({
+    'id': id,
+    'type': type,
+    'date_from': startTime ? new Date(startTime) : null,
+    'date_to': endTime ? new Date(endTime) : null,
+    'base_price': parseInt(encode(formData.get(`event-price`)), 10),
+    'destination': {
+      'name': destination.name,
+      'description': destination.description,
+      'pictures': destination.pictures.map((picture) => {
+        return {
+          src: picture.src,
+          description: picture.description,
+        };
+      })
+    },
+    'offers': checkedOffers,
+    'is_favorite': isFavorite,
+  });
+};
 
 export default class PointController {
-  constructor(container, onDataChange, onViewChange, offers, destinations) {
+  constructor(container, onDataChange, onViewChange, destinations, offers) {
     this._mode = Mode.DEFAULT;
 
     this._container = container;
@@ -61,7 +100,8 @@ export default class PointController {
     this._eventEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
 
-      const data = this._eventEditComponent.getData();
+      const formData = this._eventEditComponent.getData();
+      const data = parseFormData(formData, event.id, this._destinations, this._offers);
 
       this._onDataChange(this, event, data);
     });
@@ -69,9 +109,11 @@ export default class PointController {
     this._eventEditComponent.setDeleteButtonClickHandler(() => this._onDataChange(this, event, null));
 
     this._eventEditComponent.setFavoriteButtonHandler(() => {
-      this._onDataChange(this, event, Object.assign({}, event, {
-        isFavorite: !event.isFavorite
-      }));
+      const newPoint = PointModel.clone(event);
+
+      newPoint.isFavorite = !newPoint.isFavorite;
+
+      this._onDataChange(this, event, newPoint);
     });
 
     this._eventEditComponent.setRollupButtonHandler(() => {

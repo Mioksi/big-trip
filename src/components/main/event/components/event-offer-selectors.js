@@ -10,7 +10,8 @@ const createOfferSelector = (offer, offerTitle, index) => {
       <input class="event__offer-checkbox  visually-hidden"
         id="event-offer-${name}-${index}"
         type="checkbox"
-        name="event-offer-${name}-${index}"
+        name="event-offer"
+        value="${title}"
         ${getCheckedOffer(isChecked)}
        >
       <label class="event__offer-label" for="event-offer-${name}-${index}">
