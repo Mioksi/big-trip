@@ -1,8 +1,6 @@
 export const MAX_DESTINATIONS = 3;
 export const BAR_HEIGHT = 55;
-const MILLISECOND = 1000;
-const SECONDS_IN_HOUR = 3600;
-const HOURS_IN_DAY = 24;
+export const MAX_HOURS = 10;
 
 export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
@@ -65,11 +63,6 @@ export const SortType = {
   EVENT: `sort-event`,
   TIME: `sort-time`,
   PRICE: `sort-price`,
-};
-
-export const TimeMS = {
-  IN_HOUR: SECONDS_IN_HOUR * MILLISECOND,
-  IN_DAY: HOURS_IN_DAY * SECONDS_IN_HOUR * MILLISECOND,
 };
 
 export const Mode = {
