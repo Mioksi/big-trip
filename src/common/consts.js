@@ -112,3 +112,9 @@ export const StatusCode = {
   SUCCESS: 200,
   REDIRECT: 300,
 };
+
+export const Url = {
+  DESTINATIONS: `destinations`,
+  OFFERS: `offers`,
+  POINTS: `points`,
+};

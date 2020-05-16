@@ -22,8 +22,8 @@ const parseFormData = (formData, id, destinations, offers) => {
   const checkedOffers = offersByType.filter((offer) => eventOffers.includes(offer.title));
 
   return new PointModel({
-    'id': id,
-    'type': type,
+    id,
+    type,
     'date_from': startTime ? new Date(startTime) : null,
     'date_to': endTime ? new Date(endTime) : null,
     'base_price': parseInt(encode(formData.get(`event-price`)), 10),

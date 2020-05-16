@@ -51,6 +51,15 @@ const init = () => {
     tripController.createPoint();
   };
 
+  const loadData = (points, offers, destinations) => {
+    pointsModel.setPoints(points);
+    pointsModel.setOffers(offers);
+    pointsModel.setDestinations(destinations);
+    remove(loadingEvents);
+    render(tripMain, new TripInfoComponent(points), Place.AFTERBEGIN);
+    tripController.render();
+  };
+
   render(firstTitle, menuComponent, Place.AFTEREND);
   filterController.render();
   render(tripEvents, loadingEvents);
@@ -63,14 +72,7 @@ const init = () => {
   eventAddButton.addEventListener(`click`, onAddEventButtonClick);
 
   Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
-    .then(([points, offers, destinations]) => {
-      pointsModel.setPoints(points);
-      pointsModel.setOffers(offers);
-      pointsModel.setDestinations(destinations);
-      remove(loadingEvents);
-      render(tripMain, new TripInfoComponent(points), Place.AFTERBEGIN);
-      tripController.render();
-    });
+    .then(([points, offers, destinations]) => loadData(points, offers, destinations));
 };
 
 init();

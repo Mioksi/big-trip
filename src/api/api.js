@@ -1,5 +1,5 @@
 import Point from '../models/point';
-import {Method, StatusCode} from '../common/consts';
+import {Method, StatusCode, Url} from '../common/consts';
 
 const checkStatus = (response) => {
   if (response.status >= StatusCode.SUCCESS && response.status < StatusCode.REDIRECT) {
@@ -16,45 +16,58 @@ const API = class {
   }
 
   getDestinations() {
-    return this._load({url: `destinations`})
+    return this._load({url: Url.DESTINATIONS})
       .then((response) => response.json());
   }
 
   getOffers() {
-    return this._load({url: `offers`})
+    return this._load({url: Url.OFFERS})
       .then((response) => response.json());
   }
 
   getPoints() {
-    return this._load({url: `points`})
+    return this._load({url: Url.POINTS})
       .then((response) => response.json())
       .then(Point.parsePoints);
   }
 
   createPoint(point) {
-    return this._load({
-      url: `points`,
-      method: Method.POST,
-      body: JSON.stringify(point.toRAW()),
-      headers: new Headers({"Content-Type": `application/json`})
-    })
+    return this._load(this._getCreatePointConfig(point))
       .then((response) => response.json())
-      .then(Point.parsePoint);
+      .then(Point.parsePoint)
+      .catch((err) => {
+        throw err;
+      });
   }
 
   deletePoint(id) {
-    return this._load({url: `points/${id}`, method: Method.DELETE});
+    return this._load({url: `${Url.POINTS}/${id}`, method: Method.DELETE});
   }
 
   updatePoint(id, data) {
-    return this._load({
-      url: `points/${id}`,
-      method: Method.PUT,
+    return this._load(this._getUpdatePointConfig(id, data))
+      .then((response) => response.json())
+      .then(Point.parsePoint)
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  _getCreatePointConfig(point) {
+    return this._getLoadConfig(Url.POINTS, Method.POST, point);
+  }
+
+  _getUpdatePointConfig(id, data) {
+    return this._getLoadConfig(`${Url.POINTS}/${id}`, Method.PUT, data);
+  }
+
+  _getLoadConfig(url, method, data) {
+    return {
+      url,
+      method,
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
-    })
-      .then((response) => response.json())
-      .then(Point.parsePoint);
+    };
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
