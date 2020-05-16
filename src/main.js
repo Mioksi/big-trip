@@ -24,7 +24,7 @@ const init = () => {
   const loadingEvents = new LoadingEventsComponent();
   const menuComponent = new MenuComponent();
   const statisticsComponent = new StatisticsComponent(pointsModel);
-  const tripController = new TripController(tripEvents, pointsModel, api);
+  const tripController = new TripController(tripEvents, eventAddButton, pointsModel, api);
   const filterController = new FilterController(secondTitle, pointsModel);
 
   const showTable = () => {
@@ -44,6 +44,13 @@ const init = () => {
     'Stats': showStats,
   };
 
+  const onAddEventButtonClick = () => {
+    showTable();
+
+    filterController.setDefaultFilter();
+    tripController.createPoint();
+  };
+
   render(firstTitle, menuComponent, Place.AFTEREND);
   filterController.render();
   render(tripEvents, loadingEvents);
@@ -53,9 +60,7 @@ const init = () => {
 
   menuComponent.setMenuItemChangeHandler((menuItem) => menuTab[menuItem]());
 
-  eventAddButton.addEventListener(`click`, () => {
-    tripController.createPoint();
-  });
+  eventAddButton.addEventListener(`click`, onAddEventButtonClick);
 
   Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
     .then(([points, offers, destinations]) => {

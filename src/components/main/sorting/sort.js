@@ -1,5 +1,5 @@
 import {SortType} from '../../../common/consts';
-import AbstractComponent from '../../abstracts/abstract-component';
+import AbstractSmartComponent from '../../abstracts/abstract-smart-component';
 
 const createSorting = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -31,7 +31,7 @@ const createSorting = () => (
   </form>`
 );
 
-export default class Sort extends AbstractComponent {
+export default class Sort extends AbstractSmartComponent {
   constructor() {
     super();
 
@@ -43,6 +43,8 @@ export default class Sort extends AbstractComponent {
   getTemplate() {
     return createSorting();
   }
+
+  recoveryListeners() {}
 
   _onSortTypeChange(handler) {
     return (evt) => {

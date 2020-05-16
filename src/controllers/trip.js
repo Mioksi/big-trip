@@ -46,7 +46,7 @@ const getSortedEvents = (events, sortType) => {
 };
 
 export default class TripController {
-  constructor(container, pointsModel, api) {
+  constructor(container, eventAddButton, pointsModel, api) {
     this._container = container;
     this._pointsModel = pointsModel;
     this._api = api;
@@ -57,6 +57,7 @@ export default class TripController {
     this._dayListComponent = new DayListComponent();
     this._noEventsComponent = new NoEventsComponent();
     this._creatingPoint = null;
+    this._eventAddButton = eventAddButton;
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
@@ -104,10 +105,23 @@ export default class TripController {
     const destinations = this._pointsModel.getDestinations();
     const offers = this._pointsModel.getOffers();
 
+    this._eventAddButtonDisabled();
+
     this._creatingPoint = new PointController(dayList, this._onDataChange, this._onViewChange, destinations, offers);
 
     this._creatingPoint.render(emptyPoint, Mode.ADDING);
     this._pointControllers = this._pointControllers.concat(this._creatingPoint);
+  }
+
+  _setDefaultSort() {
+    this._onSortTypeChange(SortType.EVENT);
+    this._sortComponent.rerender();
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+  }
+
+  _eventAddButtonDisabled() {
+    this._eventAddButton.setAttribute(`disabled`, `disabled`);
+    this._setDefaultSort();
   }
 
   _removeEvents() {
@@ -174,6 +188,7 @@ export default class TripController {
           .then((pointModel) => {
             this._pointsModel.addPoint(pointModel);
             this._updateEvents();
+            this._eventAddButton.removeAttribute(`disabled`);
           });
       }
     } else if (newData === null) {
