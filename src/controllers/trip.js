@@ -228,6 +228,7 @@ export default class TripController {
   }
 
   _onFilterChange() {
+    this._setDefaultSort();
     this._updateEvents();
   }
 }
