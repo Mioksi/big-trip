@@ -4,14 +4,32 @@ import {getPointsByFilter} from '../common/utils/filter';
 export default class Points {
   constructor() {
     this._points = [];
+    this._offers = [];
+    this._destinations = [];
     this._activeFilterType = FilterType.EVERYTHING;
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
   }
 
+  getDestinations() {
+    return this._destinations;
+  }
+
+  getOffers() {
+    return this._offers;
+  }
+
   getPoints() {
     return getPointsByFilter(this._points, this._activeFilterType);
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations;
+  }
+
+  setOffers(offers) {
+    this._offers = offers;
   }
 
   setPoints(points) {

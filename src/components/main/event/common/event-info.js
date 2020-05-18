@@ -1,16 +1,30 @@
-import {TimeMS, DifferenceFormat} from '../../../../common/consts';
-import {formatTime, formatDate, getIsoDate} from '../../../../common/utils/helpers';
-import {eventPlaceholder} from '../../../../mock/event';
+import {DifferenceFormat} from '../../../../common/consts';
+import {formatTime, formatDate, getIsoDate, castTimeFormat} from '../../../../common/utils/helpers';
+import {eventPlaceholder} from '../../../../common/consts';
 import moment from "moment";
 
 const calculateTimeDifference = (start, end) => {
   const startTime = moment(start);
   const endTime = moment(end);
-  const difference = endTime.diff(startTime);
 
-  const days = (difference > TimeMS.IN_DAY) ? endTime.diff(startTime, `days`) + DifferenceFormat.DAY : ``;
-  const hours = (difference > TimeMS.IN_HOUR) ? moment(difference).format(`HH`) + DifferenceFormat.HOUR : ``;
-  const minutes = moment(difference).format(`mm`) + DifferenceFormat.MINUTE;
+  const differenceDays = endTime.diff(startTime, `days`);
+  startTime.add(differenceDays, `days`);
+
+  const differenceHours = endTime.diff(startTime, `hours`);
+  startTime.add(differenceHours, `hours`);
+
+  const differenceMinutes = endTime.diff(startTime, `minutes`);
+  const minutes = castTimeFormat(differenceMinutes) + DifferenceFormat.MINUTE;
+
+  let days = ``;
+  let hours = ``;
+
+  if (differenceDays > 0) {
+    days = differenceDays > 0 ? castTimeFormat(differenceDays) + DifferenceFormat.DAY : ``;
+    hours = castTimeFormat(differenceHours) + DifferenceFormat.HOUR;
+  } else if (differenceHours > 0) {
+    hours = castTimeFormat(differenceHours) + DifferenceFormat.HOUR;
+  }
 
   return `${days} ${hours} ${minutes}`;
 };

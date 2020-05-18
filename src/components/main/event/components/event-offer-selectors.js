@@ -1,20 +1,21 @@
-import {getBoolean} from '../../../../common/utils/helpers';
+const getCheckedOffer = (isChecked) => isChecked ? `checked` : ``;
 
-const getCheckedFilter = () => getBoolean() ? `checked` : ``;
-
-const createOfferSelector = (offer) => {
-  const {type, name, price} = offer;
+const createOfferSelector = (offer, offerTitle, index) => {
+  const {title, price} = offer;
+  const name = title.replace(/ /g, `-`).toLowerCase();
+  const isChecked = offerTitle.some((itemTitle) => itemTitle === offer.title);
 
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden"
-        id="event-offer-${type}-1"
+        id="event-offer-${name}-${index}"
         type="checkbox"
-        name="event-offer-${type}-1"
-        ${getCheckedFilter()}
+        name="event-offer"
+        value="${title}"
+        ${getCheckedOffer(isChecked)}
        >
-      <label class="event__offer-label" for="event-offer-${type}-1">
-        <span class="event__offer-title">${name}</span>
+      <label class="event__offer-label" for="event-offer-${name}-${index}">
+        <span class="event__offer-title">${title}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${price}</span>
       </label>
@@ -22,6 +23,8 @@ const createOfferSelector = (offer) => {
   );
 };
 
-const createOfferSelectors = (offers) => offers.map(createOfferSelector).join(``);
+const createOfferSelectors = (offers, offerTitles) => {
+  return offers.map((offer, index) => createOfferSelector(offer, offerTitles, index + 1)).join(``);
+};
 
 export {createOfferSelectors};

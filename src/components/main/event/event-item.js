@@ -4,7 +4,7 @@ import AbstractComponent from '../../abstracts/abstract-component';
 
 const createEventItem = (event) => {
   const {type, destination, price, offers} = event;
-  const {city} = destination;
+  const {name} = destination;
   const {start, end, eventType, startIsoDate, endIsoDate, timeDifference} = getEventInfo(event);
 
   return (
@@ -13,7 +13,7 @@ const createEventItem = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
         </div>
-        <h3 class="event__title">${eventType} ${city}</h3>
+        <h3 class="event__title">${eventType} ${name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${startIsoDate}">${start}</time>

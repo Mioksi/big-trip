@@ -1,7 +1,7 @@
 import {MAX_DESTINATIONS, MONTHS} from '../../../../common/consts';
 
 export const getTripRoute = (events) => {
-  const tripDestinations = events.map((tripEvent) => tripEvent.destination.city);
+  const tripDestinations = events.map((event) => event.destination.name);
 
   if (tripDestinations.length <= MAX_DESTINATIONS) {
     tripDestinations.join(` &mdash; `);

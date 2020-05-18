@@ -1,12 +1,13 @@
-import {EVENTS_AMOUNT, Place, MenuItem} from './common/consts';
-import {render} from './common/utils/render';
-import {generateTripEvents} from './mock/event';
-import TripInfoComponent from './components/header/trip-info/trip-info';
+import API from './api/api';
+import FilterController from './controllers/filter';
 import MenuComponent from './components/header/menu/menu';
+import PointsModel from './models/points';
 import StatisticsComponent from './components/header/statistics/statistics';
 import TripController from './controllers/trip';
-import PointsModel from './models/points';
-import FilterController from './controllers/filter';
+import TripInfoComponent from './components/header/trip-info/trip-info';
+import LoadingEventsComponent from './components/main/event/loading-events';
+import {AUTHORIZATION, END_POINT, Place, MenuItem} from './common/consts';
+import {render, remove} from './common/utils/render';
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
@@ -16,16 +17,14 @@ const eventAddButton = tripMain.querySelector(`.trip-main__event-add-btn`);
 
 const [firstTitle, secondTitle] = tripControlsHeaders;
 
-const events = generateTripEvents(EVENTS_AMOUNT);
-
 const init = () => {
+  const api = new API(END_POINT, AUTHORIZATION);
   const pointsModel = new PointsModel();
 
-  pointsModel.setPoints(events);
-
+  const loadingEvents = new LoadingEventsComponent();
   const menuComponent = new MenuComponent();
   const statisticsComponent = new StatisticsComponent(pointsModel);
-  const tripController = new TripController(tripEvents, pointsModel);
+  const tripController = new TripController(tripEvents, eventAddButton, pointsModel, api);
   const filterController = new FilterController(secondTitle, pointsModel);
 
   const showTable = () => {
@@ -45,19 +44,35 @@ const init = () => {
     'Stats': showStats,
   };
 
-  render(tripMain, new TripInfoComponent(events), Place.AFTERBEGIN);
+  const onAddEventButtonClick = () => {
+    showTable();
+
+    filterController.setDefaultFilter();
+    tripController.createPoint();
+  };
+
+  const loadData = (points, offers, destinations) => {
+    pointsModel.setPoints(points);
+    pointsModel.setOffers(offers);
+    pointsModel.setDestinations(destinations);
+    remove(loadingEvents);
+    render(tripMain, new TripInfoComponent(points), Place.AFTERBEGIN);
+    tripController.render();
+  };
+
   render(firstTitle, menuComponent, Place.AFTEREND);
   filterController.render();
-  tripController.render();
+  render(tripEvents, loadingEvents);
 
   render(tripEvents, statisticsComponent);
   statisticsComponent.hide();
 
   menuComponent.setMenuItemChangeHandler((menuItem) => menuTab[menuItem]());
 
-  eventAddButton.addEventListener(`click`, () => {
-    tripController.createPoint();
-  });
+  eventAddButton.addEventListener(`click`, onAddEventButtonClick);
+
+  Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
+    .then(([points, offers, destinations]) => loadData(points, offers, destinations));
 };
 
 init();

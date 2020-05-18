@@ -1,5 +1,5 @@
 const createOption = (city) => `<option value="${city}"></option>`;
 
-const createOptions = (cities) => cities.map((createOption)).join(``);
+const createOptions = (cities) => cities.map((city) => createOption(city.name)).join(``);
 
 export {createOptions};
