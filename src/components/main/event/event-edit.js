@@ -109,6 +109,8 @@ export default class EventEdit extends AbstractSmartComponent {
     this._eventType = this._event.type;
     this._eventOffers = this._event.offers;
     this._eventDestination = this._event.destination;
+    this._startDate = this._event.startTime;
+    this._endDate = this._event.endTime;
 
     this._allOffers = offers;
     this._allDestinations = destinations;
@@ -120,12 +122,12 @@ export default class EventEdit extends AbstractSmartComponent {
     this._deleteButtonClickHandler = null;
     this._favoriteButtonHandler = null;
     this._rollupButtonHandler = null;
-    this._flatpickr = null;
+    this._flatpickrStartTime = null;
+    this._flatpickrEndTime = null;
 
     this._onEventTypeChange = this._onEventTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
 
-    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -140,9 +142,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   removeElement() {
-    if (this._flatpickr) {
-      this._destroyFlatpickr();
-    }
+    this._destroyFlatpickr();
 
     super.removeElement();
   }
@@ -158,7 +158,7 @@ export default class EventEdit extends AbstractSmartComponent {
   rerender() {
     super.rerender();
 
-    this._applyFlatpickr();
+    this.applyFlatpickr();
   }
 
   reset() {
@@ -242,25 +242,33 @@ export default class EventEdit extends AbstractSmartComponent {
     };
   }
 
-  _getFlatpickrConfig(timeInput, date) {
-    this._flatpickr = flatpickr(timeInput, this._setFlatpickr(date));
+  _getFlatpickrStartTime(timeInput, date) {
+    return flatpickr(timeInput, Object.assign({}, {minDate: date}, this._setFlatpickr(date)));
+  }
+
+  _getFlatpickrEndTime(timeInput, date) {
+    return flatpickr(timeInput, Object.assign({}, {minDate: this._startDate}, this._setFlatpickr(date)));
   }
 
   _destroyFlatpickr() {
-    this._flatpickr.destroy();
-    this._flatpickr = null;
+    if (this._flatpickrStartTime) {
+      this._flatpickrStartTime.destroy();
+      this._flatpickrStartTime = null;
+    }
+    if (this._flatpickrEndTime) {
+      this._flatpickrEndTime.destroy();
+      this._flatpickrEndTime = null;
+    }
   }
 
-  _applyFlatpickr() {
+  applyFlatpickr() {
     const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
     const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
 
-    if (this._flatpickr) {
-      this._destroyFlatpickr();
-    }
+    this._destroyFlatpickr();
 
-    this._getFlatpickrConfig(startTimeInput, this._event.startTime);
-    this._getFlatpickrConfig(endTimeInput, this._event.endTime);
+    this._flatpickrStartTime = this._getFlatpickrStartTime(startTimeInput, this._startDate);
+    this._flatpickrEndTime = this._getFlatpickrEndTime(endTimeInput, this._endDate);
   }
 
   _subscribeOnEvents() {

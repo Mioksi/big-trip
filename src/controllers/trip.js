@@ -179,6 +179,7 @@ export default class TripController {
   _onDataChange(pointController, oldData, newData) {
     if (oldData.id === emptyPoint.id) {
       this._creatingPoint = null;
+      this._eventAddButton.removeAttribute(`disabled`);
 
       if (newData === null) {
         pointController.destroy();

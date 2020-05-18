@@ -140,6 +140,8 @@ export default class PointController {
 
     render(this._container, this._eventEditComponent, Place.AFTERBEGIN);
 
+    this._eventEditComponent.applyFlatpickr();
+
     document.addEventListener(`keydown`, this._onFormEscPress);
   }
 
@@ -157,6 +159,7 @@ export default class PointController {
 
   _replaceEventToEdit() {
     this._onViewChange();
+    this._eventEditComponent.applyFlatpickr();
 
     this._mode = Mode.EDIT;
 
