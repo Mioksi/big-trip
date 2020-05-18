@@ -190,6 +190,9 @@ export default class TripController {
             this._pointsModel.addPoint(pointModel);
             this._updateEvents();
             this._eventAddButton.removeAttribute(`disabled`);
+          })
+          .catch(() => {
+            pointController.shake();
           });
       }
     } else if (newData === null) {
@@ -197,6 +200,9 @@ export default class TripController {
         .then(() => {
           this._pointsModel.removePoint(oldData.id);
           this._updateEvents();
+        })
+        .catch(() => {
+          pointController.shake();
         });
     } else {
       this._api.updatePoint(oldData.id, newData)
@@ -207,6 +213,9 @@ export default class TripController {
             pointController.render(pointModel, Mode.DEFAULT);
             this._updateEvents();
           }
+        })
+        .catch(() => {
+          pointController.shake();
         });
     }
   }
