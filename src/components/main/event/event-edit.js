@@ -142,7 +142,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   removeElement() {
-    this._destroyFlatpickr();
+    this.destroyFlatpickr();
 
     super.removeElement();
   }
@@ -250,7 +250,7 @@ export default class EventEdit extends AbstractSmartComponent {
     return flatpickr(timeInput, Object.assign({}, {minDate: this._startDate}, this._setFlatpickr(date)));
   }
 
-  _destroyFlatpickr() {
+  destroyFlatpickr() {
     if (this._flatpickrStartTime) {
       this._flatpickrStartTime.destroy();
       this._flatpickrStartTime = null;
@@ -265,7 +265,7 @@ export default class EventEdit extends AbstractSmartComponent {
     const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
     const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
 
-    this._destroyFlatpickr();
+    this.destroyFlatpickr();
 
     this._flatpickrStartTime = this._getFlatpickrStartTime(startTimeInput, this._startDate);
     this._flatpickrEndTime = this._getFlatpickrEndTime(endTimeInput, this._endDate);

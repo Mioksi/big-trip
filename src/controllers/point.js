@@ -103,6 +103,7 @@ export default class PointController {
       const formData = this._eventEditComponent.getData();
       const data = parseFormData(formData, event.id, this._destinations, this._offers);
 
+      this._eventEditComponent.destroyFlatpickr();
       this._onDataChange(this, event, data);
     });
 
@@ -152,6 +153,8 @@ export default class PointController {
 
     if (document.contains(this._eventEditComponent.getElement())) {
       replace(this._eventItemComponent, this._eventEditComponent);
+
+      this._eventEditComponent.destroyFlatpickr();
     }
 
     document.removeEventListener(`keydown`, this._onFormEscPress);
