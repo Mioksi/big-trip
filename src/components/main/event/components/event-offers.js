@@ -1,3 +1,5 @@
+import {MAX_OFFERS} from '../../../../common/consts';
+
 const createOfferMarkup = (offer) => {
   const {title, price} = offer;
 
@@ -10,6 +12,6 @@ const createOfferMarkup = (offer) => {
   );
 };
 
-const createOffers = (offers) => offers.map((createOfferMarkup)).join(``);
+const createOffers = (offers) => offers.slice(0, MAX_OFFERS).map((createOfferMarkup)).join(``);
 
 export {createOffers};

@@ -1,4 +1,5 @@
 export const MAX_DESTINATIONS = 3;
+export const MAX_OFFERS = 3;
 export const BAR_HEIGHT = 55;
 export const MAX_HOURS = 10;
 export const SHAKE_ANIMATION_TIMEOUT = 600;
