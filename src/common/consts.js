@@ -1,6 +1,7 @@
 export const MAX_DESTINATIONS = 3;
 export const BAR_HEIGHT = 55;
 export const MAX_HOURS = 10;
+export const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
@@ -53,6 +54,12 @@ export const iconMap = {
   'restaurant': `🍴`,
 };
 
+export const buttonText = {
+  cancelButtonText: `Cancel`,
+  deleteButtonText: `Delete`,
+  saveButtonText: `Save`
+};
+
 export const Place = {
   BEFOREEND: `beforeend`,
   AFTERBEGIN: `afterbegin`,
@@ -81,11 +88,6 @@ export const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`,
-};
-
-export const ButtonText = {
-  CANCEL: `Cancel`,
-  DELETE: `Delete`,
 };
 
 export const FormatDate = {

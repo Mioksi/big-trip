@@ -1,4 +1,4 @@
-import {ESC_KEY, Mode, emptyPoint, Place} from '../common/consts';
+import {ESC_KEY, Mode, emptyPoint, Place, SHAKE_ANIMATION_TIMEOUT} from '../common/consts';
 import {getOffersByType} from '../common/utils/helpers';
 import {render, replace, remove} from '../common/utils/render';
 import EventItemComponent from '../components/main/event/event-item';
@@ -90,6 +90,21 @@ export default class PointController {
     }
   }
 
+  shake() {
+    this._eventEditComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._eventEditComponent.getElement().style.outline = `2px solid red`;
+
+    setTimeout(() => {
+      this._eventEditComponent.getElement().style.animation = ``;
+      this._eventEditComponent.getElement().style.outline = ``;
+
+      this._eventEditComponent.setData({
+        saveButtonText: `Save`,
+        deleteButtonText: `Delete`,
+      });
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
   _addHandlers(event) {
     this._eventItemComponent.setRollupButtonClickHandler(() => {
       this._replaceEventToEdit();
@@ -103,11 +118,25 @@ export default class PointController {
       const formData = this._eventEditComponent.getData();
       const data = parseFormData(formData, event.id, this._destinations, this._offers);
 
+      this._eventEditComponent.setData({
+        saveButtonText: `Saving...`,
+      });
+
       this._eventEditComponent.destroyFlatpickr();
+      this._eventEditComponent.disableForm();
+
       this._onDataChange(this, event, data);
     });
 
-    this._eventEditComponent.setDeleteButtonClickHandler(() => this._onDataChange(this, event, null));
+    this._eventEditComponent.setDeleteButtonClickHandler(() => {
+      this._eventEditComponent.setData({
+        deleteButtonText: `Deleting...`,
+      });
+
+      this._eventEditComponent.disableForm();
+
+      this._onDataChange(this, event, null);
+    });
 
     this._eventEditComponent.setFavoriteButtonHandler(() => {
       const newPoint = PointModel.clone(event);
