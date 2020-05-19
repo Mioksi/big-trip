@@ -1,4 +1,5 @@
 import API from './api/api';
+import Provider from "./api/provider.js";
 import FilterController from './controllers/filter';
 import MenuComponent from './components/header/menu/menu';
 import PointsModel from './models/points';
@@ -18,12 +19,13 @@ const eventAddButton = tripMain.querySelector(`.trip-main__event-add-btn`);
 const [firstTitle, secondTitle] = tripControlsHeaders;
 
 const api = new API(END_POINT, AUTHORIZATION);
+const apiWithProvider = new Provider(api);
 const pointsModel = new PointsModel();
 
 const loadingEvents = new LoadingEventsComponent();
 const menuComponent = new MenuComponent();
 const statisticsComponent = new StatisticsComponent(pointsModel);
-const tripController = new TripController(tripEvents, eventAddButton, pointsModel, api);
+const tripController = new TripController(tripEvents, eventAddButton, pointsModel, apiWithProvider);
 const filterController = new FilterController(secondTitle, pointsModel);
 
 const showTable = () => {
@@ -71,7 +73,7 @@ const init = () => {
 
   eventAddButton.addEventListener(`click`, onAddEventButtonClick);
 
-  Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
+  Promise.all([apiWithProvider.getPoints(), apiWithProvider.getOffers(), apiWithProvider.getDestinations()])
     .then(([points, offers, destinations]) => loadData(points, offers, destinations));
 
   window.addEventListener(`load`, () => {
