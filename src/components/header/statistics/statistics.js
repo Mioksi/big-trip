@@ -10,6 +10,14 @@ const ChartTitle = {
   TIME_SPEND: `TIME SPEND`,
 };
 
+const ChartParameter = {
+  FONT_SIZE: 13,
+  FONT_SIZE_TITLE: 23,
+  PADDING: 5,
+  BAR_THICKNESS: 44,
+  MIN_BAR_LENGTH: 50,
+};
+
 const getUniqItems = (item, index, array) => array.indexOf(item) === index;
 
 const geUniqPoints = (points) => points.map((point) => point.type).filter(getUniqItems);
@@ -48,7 +56,7 @@ const getChartConfig = (title, types, data, formatter) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: ChartParameter.FONT_SIZE
           },
           color: `#000000`,
           anchor: `end`,
@@ -60,15 +68,15 @@ const getChartConfig = (title, types, data, formatter) => {
         display: true,
         text: title,
         fontColor: `#000000`,
-        fontSize: 23,
+        fontSize: ChartParameter.FONT_SIZE_TITLE,
         position: `left`,
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            padding: ChartParameter.PADDING,
+            fontSize: ChartParameter.FONT_SIZE,
             callback: (type) => {
               return `${iconMap[type]} ${type.toUpperCase()}`;
             }
@@ -77,7 +85,7 @@ const getChartConfig = (title, types, data, formatter) => {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
+          barThickness: ChartParameter.BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -88,7 +96,7 @@ const getChartConfig = (title, types, data, formatter) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: ChartParameter.MIN_BAR_LENGTH
         }],
       },
       legend: {
