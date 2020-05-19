@@ -131,6 +131,11 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._onEventTypeChange = this._onEventTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
+    this._onStartDateChange = this._onStartDateChange.bind(this);
+    this._onEndDateChange = this._onEndDateChange.bind(this);
+    this._onPriceChange = this._onPriceChange.bind(this);
+    this._onOffersChange = this._onOffersChange.bind(this);
+    this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
 
     this._subscribeOnEvents();
   }
@@ -226,6 +231,47 @@ export default class EventEdit extends AbstractSmartComponent {
     this._rollupButtonHandler = handler;
   }
 
+  destroyFlatpickr() {
+    if (this._flatpickrStartTime) {
+      this._flatpickrStartTime.destroy();
+      this._flatpickrStartTime = null;
+    }
+    if (this._flatpickrEndTime) {
+      this._flatpickrEndTime.destroy();
+      this._flatpickrEndTime = null;
+    }
+  }
+
+  applyFlatpickr() {
+    const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
+    const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
+
+    this.destroyFlatpickr();
+
+    this._flatpickrStartTime = this._getFlatpickrStartTime(startTimeInput, this._startDate);
+    this._flatpickrEndTime = this._getFlatpickrEndTime(endTimeInput, this._endDate);
+  }
+
+  _setFlatpickr(date) {
+    return {
+      'altInput': true,
+      'allowInput': true,
+      'enableTime': true,
+      'dateFormat': FormatDate.ISO,
+      'altFormat': FormatDate.DEFAULT,
+      'time_24hr': true,
+      'defaultDate': date || ``,
+    };
+  }
+
+  _getFlatpickrStartTime(timeInput, date) {
+    return flatpickr(timeInput, Object.assign({}, {minDate: date}, this._setFlatpickr(date)));
+  }
+
+  _getFlatpickrEndTime(timeInput, date) {
+    return flatpickr(timeInput, Object.assign({}, {minDate: this._startDate}, this._setFlatpickr(date)));
+  }
+
   _onEventTypeChange(evt) {
     this._eventType = evt.target.value;
 
@@ -253,45 +299,34 @@ export default class EventEdit extends AbstractSmartComponent {
     };
   }
 
-  _setFlatpickr(date) {
-    return {
-      'altInput': true,
-      'allowInput': true,
-      'enableTime': true,
-      'dateFormat': FormatDate.ISO,
-      'altFormat': FormatDate.DEFAULT,
-      'time_24hr': true,
-      'defaultDate': date || ``,
+  _onStartDateChange(evt) {
+    this._startDate = evt.target.value;
+  }
+
+  _onEndDateChange(evt) {
+    this._endDate = evt.target.value;
+  }
+
+  _onPriceChange(evt) {
+    this._event.price = evt.target.value;
+  }
+
+  _onOffersChange(eventOffers) {
+    return (evt) => {
+      const currentOffer = evt.target;
+      currentOffer.toggleAttribute(`checked`);
+
+      const checkedOffers = [...eventOffers.querySelectorAll(`input`)].filter((input) => input.checked);
+      const checkedOffersValue = [...checkedOffers].map((offer) => offer.value);
+
+      this._eventOffers = this._offersByType.filter((offer) => checkedOffersValue.includes(offer.title));
     };
   }
 
-  _getFlatpickrStartTime(timeInput, date) {
-    return flatpickr(timeInput, Object.assign({}, {minDate: date}, this._setFlatpickr(date)));
-  }
+  _onFavoriteButtonClick() {
+    this._event.isFavorite = !this._event.isFavorite;
 
-  _getFlatpickrEndTime(timeInput, date) {
-    return flatpickr(timeInput, Object.assign({}, {minDate: this._startDate}, this._setFlatpickr(date)));
-  }
-
-  destroyFlatpickr() {
-    if (this._flatpickrStartTime) {
-      this._flatpickrStartTime.destroy();
-      this._flatpickrStartTime = null;
-    }
-    if (this._flatpickrEndTime) {
-      this._flatpickrEndTime.destroy();
-      this._flatpickrEndTime = null;
-    }
-  }
-
-  applyFlatpickr() {
-    const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
-    const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
-
-    this.destroyFlatpickr();
-
-    this._flatpickrStartTime = this._getFlatpickrStartTime(startTimeInput, this._startDate);
-    this._flatpickrEndTime = this._getFlatpickrEndTime(endTimeInput, this._endDate);
+    this.rerender();
   }
 
   _subscribeOnEvents() {
@@ -299,8 +334,24 @@ export default class EventEdit extends AbstractSmartComponent {
 
     const eventTypeList = element.querySelector(`.event__type-list`);
     const eventDestination = element.querySelector(`.event__input--destination`);
+    const startTimeInput = element.querySelector(`#event-start-time-1`);
+    const endTimeInput = element.querySelector(`#event-end-time-1`);
+    const eventPrice = element.querySelector(`.event__input--price`);
+    const eventOffers = element.querySelector(`.event__available-offers`);
+    const favoriteButton = element.querySelector(`.event__favorite-btn`);
 
     eventTypeList.addEventListener(`change`, this._onEventTypeChange);
     eventDestination.addEventListener(`change`, this._onDestinationChange(eventDestination));
+    startTimeInput.addEventListener(`change`, this._onStartDateChange);
+    endTimeInput.addEventListener(`change`, this._onEndDateChange);
+    eventPrice.addEventListener(`input`, this._onPriceChange);
+
+    if (eventOffers) {
+      eventOffers.addEventListener(`change`, this._onOffersChange(eventOffers));
+    }
+
+    if (favoriteButton) {
+      favoriteButton.addEventListener(`click`, this._onFavoriteButtonClick);
+    }
   }
 }
