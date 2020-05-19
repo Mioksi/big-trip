@@ -17,49 +17,49 @@ const eventAddButton = tripMain.querySelector(`.trip-main__event-add-btn`);
 
 const [firstTitle, secondTitle] = tripControlsHeaders;
 
+const api = new API(END_POINT, AUTHORIZATION);
+const pointsModel = new PointsModel();
+
+const loadingEvents = new LoadingEventsComponent();
+const menuComponent = new MenuComponent();
+const statisticsComponent = new StatisticsComponent(pointsModel);
+const tripController = new TripController(tripEvents, eventAddButton, pointsModel, api);
+const filterController = new FilterController(secondTitle, pointsModel);
+
+const showTable = () => {
+  menuComponent.setActiveItem(MenuItem.TABLE);
+  statisticsComponent.hide();
+  tripController.show();
+};
+
+const showStats = () => {
+  menuComponent.setActiveItem(MenuItem.STATS);
+  tripController.hide();
+  statisticsComponent.show();
+};
+
+const menuTab = {
+  'Table': showTable,
+  'Stats': showStats,
+};
+
+const onAddEventButtonClick = () => {
+  showTable();
+
+  filterController.setDefaultFilter();
+  tripController.createPoint();
+};
+
+const loadData = (points, offers, destinations) => {
+  pointsModel.setPoints(points);
+  pointsModel.setOffers(offers);
+  pointsModel.setDestinations(destinations);
+  remove(loadingEvents);
+  render(tripMain, new TripInfoComponent(points), Place.AFTERBEGIN);
+  tripController.render();
+};
+
 const init = () => {
-  const api = new API(END_POINT, AUTHORIZATION);
-  const pointsModel = new PointsModel();
-
-  const loadingEvents = new LoadingEventsComponent();
-  const menuComponent = new MenuComponent();
-  const statisticsComponent = new StatisticsComponent(pointsModel);
-  const tripController = new TripController(tripEvents, eventAddButton, pointsModel, api);
-  const filterController = new FilterController(secondTitle, pointsModel);
-
-  const showTable = () => {
-    menuComponent.setActiveItem(MenuItem.TABLE);
-    statisticsComponent.hide();
-    tripController.show();
-  };
-
-  const showStats = () => {
-    menuComponent.setActiveItem(MenuItem.STATS);
-    tripController.hide();
-    statisticsComponent.show();
-  };
-
-  const menuTab = {
-    'Table': showTable,
-    'Stats': showStats,
-  };
-
-  const onAddEventButtonClick = () => {
-    showTable();
-
-    filterController.setDefaultFilter();
-    tripController.createPoint();
-  };
-
-  const loadData = (points, offers, destinations) => {
-    pointsModel.setPoints(points);
-    pointsModel.setOffers(offers);
-    pointsModel.setDestinations(destinations);
-    remove(loadingEvents);
-    render(tripMain, new TripInfoComponent(points), Place.AFTERBEGIN);
-    tripController.render();
-  };
-
   render(firstTitle, menuComponent, Place.AFTEREND);
   filterController.render();
   render(tripEvents, loadingEvents);
@@ -73,6 +73,13 @@ const init = () => {
 
   Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
     .then(([points, offers, destinations]) => loadData(points, offers, destinations));
+
+  window.addEventListener(`load`, () => {
+    navigator.serviceWorker.register(`/sw.js`)
+      .then(() => {
+      }).catch(() => {
+      });
+  });
 };
 
 init();
