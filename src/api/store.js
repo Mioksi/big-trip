@@ -45,8 +45,8 @@ export default class Store {
 
   setItems(items) {
     this._storage.setItem(
-      this._storeKey,
-      JSON.stringify(items)
+        this._storeKey,
+        JSON.stringify(items)
     );
   }
 
