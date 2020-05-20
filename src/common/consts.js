@@ -11,6 +11,10 @@ export const EVENT_TYPES_IN = [`check-in`, `sightseeing`, `restaurant`];
 export const AUTHORIZATION = `Basic beaAeswIQoYdx434d5`;
 export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v1`;
+export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
 export const FILTER_ID_PREFIX = `filter-`;
 export const HIDDEN_CLASS = `visually-hidden`;
 

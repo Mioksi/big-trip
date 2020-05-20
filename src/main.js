@@ -1,5 +1,6 @@
 import API from './api/api';
 import Provider from "./api/provider.js";
+import Store from './api/store';
 import FilterController from './controllers/filter';
 import MenuComponent from './components/header/menu/menu';
 import PointsModel from './models/points';
@@ -7,7 +8,7 @@ import StatisticsComponent from './components/header/statistics/statistics';
 import TripController from './controllers/trip';
 import TripInfoComponent from './components/header/trip-info/trip-info';
 import LoadingEventsComponent from './components/main/event/loading-events';
-import {AUTHORIZATION, END_POINT, Place, MenuItem} from './common/consts';
+import {AUTHORIZATION, END_POINT, STORE_NAME, Place, MenuItem} from './common/consts';
 import {render, remove} from './common/utils/render';
 
 const tripMain = document.querySelector(`.trip-main`);
@@ -19,7 +20,8 @@ const eventAddButton = tripMain.querySelector(`.trip-main__event-add-btn`);
 const [firstTitle, secondTitle] = tripControlsHeaders;
 
 const api = new API(END_POINT, AUTHORIZATION);
-const apiWithProvider = new Provider(api);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const pointsModel = new PointsModel();
 
 const loadingEvents = new LoadingEventsComponent();

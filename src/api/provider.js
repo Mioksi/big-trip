@@ -1,30 +1,54 @@
+import Point from '../models/point';
+
 export default class Provider {
-  constructor(api) {
+  constructor(api, store) {
     this._api = api;
+    this._store = store;
   }
 
   getDestinations() {
     if (this._isOnline()) {
-      return this._api.getDestinations();
+      return this._api.getDestinations()
+        .then((destinations) => {
+          this._store.setDestinations(destinations);
+
+          return destinations;
+        });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const storeDestinations = this._store.getDestinations();
+
+    return Promise.resolve(storeDestinations);
   }
 
   getOffers() {
     if (this._isOnline()) {
-      return this._api.getOffers();
+      return this._api.getOffers()
+        .then((offers) => {
+          this._store.setOffers(offers);
+
+          return offers;
+        });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const storeOffers = this._store.getOffers();
+
+    return Promise.resolve(storeOffers);
   }
 
   getPoints() {
     if (this._isOnline()) {
-      return this._api.getPoints();
+      return this._api.getPoints()
+        .then((points) => {
+          points.forEach((task) => this._store.setItem(task.id, task.toRAW()));
+
+          return points;
+        });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const storePoints = Object.values(this._store.getItems());
+
+    return Promise.resolve(Point.parsePoints(storePoints));
   }
 
   createPoint(point) {
