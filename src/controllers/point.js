@@ -142,8 +142,6 @@ export default class PointController {
       const newPoint = PointModel.clone(event);
 
       newPoint.isFavorite = !newPoint.isFavorite;
-
-      this._onDataChange(this, event, newPoint);
     });
 
     this._eventEditComponent.setRollupButtonHandler(() => {
