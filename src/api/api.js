@@ -53,6 +53,16 @@ const API = class {
       });
   }
 
+  sync(data) {
+    return this._load({
+      url: `${Url.POINTS}/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json());
+  }
+
   _getCreatePointConfig(point) {
     return this._getLoadConfig(Url.POINTS, Method.POST, point);
   }
