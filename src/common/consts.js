@@ -8,7 +8,7 @@ export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
 export const EVENT_TYPES_IN = [`check-in`, `sightseeing`, `restaurant`];
 
-export const AUTHORIZATION = `Basic beaAeswIQoYdx434d5`;
+export const AUTHORIZATION = `Basic beaAeswIKoYSdx434d5`;
 export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 const STORE_PREFIX = `bigtrip-localstorage`;

@@ -1,7 +1,8 @@
 const isCheckedFilter = (checked) => checked ? `checked` : ``;
+const isDisabledFilter = (disabled) => disabled ? `disabled` : ``;
 
 const createFilter = (filter) => {
-  const {name, checked} = filter;
+  const {name, checked, disabled} = filter;
 
   return (
     `<div class="trip-filters__filter">
@@ -11,6 +12,7 @@ const createFilter = (filter) => {
         name="trip-filter"
         value="${name}"
         ${isCheckedFilter(checked)}
+        ${isDisabledFilter(disabled)}
       >
       <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>
     </div>`
