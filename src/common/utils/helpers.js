@@ -3,6 +3,8 @@ import moment from "moment";
 
 export const formatTime = (date) => moment(date).format(FormatDate.MOMENT_TIME);
 export const formatDate = (date) => moment(date).format(FormatDate.MOMENT_DATE);
+export const formatMonth = (date) => moment(date).format(FormatDate.MOMENT_MONTH);
+export const formatDay = (date) => moment(date).format(FormatDate.MOMENT_DAY);
 export const getIsoDate = (date) => moment(date).format(FormatDate.MOMENT_ISO);
 
 export const castTimeFormat = (value) => value < MAX_HOURS ? `0${value}` : String(value);

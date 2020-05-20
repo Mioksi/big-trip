@@ -4,7 +4,6 @@ export const BAR_HEIGHT = 55;
 export const MAX_HOURS = 10;
 export const SHAKE_ANIMATION_TIMEOUT = 600;
 
-export const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
 export const EVENT_TYPES_IN = [`check-in`, `sightseeing`, `restaurant`];
 
@@ -101,6 +100,8 @@ export const FormatDate = {
   MOMENT_TIME: `HH:mm`,
   MOMENT_DATE: `DD/MM/YY`,
   MOMENT_ISO: `YYYY-MM-DDTHH:mm`,
+  MOMENT_MONTH: `MMM`,
+  MOMENT_DAY: `DD`,
 };
 
 export const MenuItem = {
