@@ -43,6 +43,13 @@ export default class Store {
     );
   }
 
+  setItems(items) {
+    this._storage.setItem(
+      this._storeKey,
+      JSON.stringify(items)
+    );
+  }
+
   setDestinations(destinations) {
     this._storage.setItem(this._storeDestinationKey, JSON.stringify(destinations));
   }
