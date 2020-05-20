@@ -1,4 +1,5 @@
 import Point from '../models/point';
+import {nanoid} from "nanoid";
 
 export default class Provider {
   constructor(api, store) {
@@ -40,7 +41,7 @@ export default class Provider {
     if (this._isOnline()) {
       return this._api.getPoints()
         .then((points) => {
-          points.forEach((task) => this._store.setItem(task.id, task.toRAW()));
+          points.forEach((point) => this._store.setItem(point.id, point.toRAW()));
 
           return points;
         });
@@ -53,26 +54,48 @@ export default class Provider {
 
   createPoint(point) {
     if (this._isOnline()) {
-      return this._api.createPoint(point);
+      return this._api.createPoint(point)
+        .then((newPoint) => {
+          this._store.setItem(newPoint.id, newPoint.toRAW());
+
+          return newPoint;
+        });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const localNewPointId = nanoid();
+    const localNewPoint = Point.clone(Object.assign(point, {id: localNewPointId}));
+
+    this._store.setItem(localNewPoint.id, localNewPoint.toRAW());
+
+    return Promise.resolve(localNewPoint);
   }
 
-  updatePoint(id, data) {
+  updatePoint(id, point) {
     if (this._isOnline()) {
-      return this._api.updatePoint(id, data);
+      return this._api.updatePoint(id, point)
+        .then((newPoint) => {
+          this._store.setItem(newPoint.id, newPoint.toRAW());
+
+          return newPoint;
+        });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const localPoint = Point.clone(Object.assign(point, {id}));
+
+    this._store.setItem(id, localPoint.toRAW());
+
+    return Promise.resolve(localPoint);
   }
 
   deletePoint(id) {
     if (this._isOnline()) {
-      return this._api.deletePoint(id);
+      return this._api.deletePoint(id)
+        .then(() => this._store.removeItem(id));
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    this._store.removeItem(id);
+
+    return Promise.resolve();
   }
 
   _isOnline() {
