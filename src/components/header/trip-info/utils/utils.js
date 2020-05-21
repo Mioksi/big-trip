@@ -5,7 +5,7 @@ export const getTripRoute = (events) => {
   const tripDestinations = events.map((event) => event.destination.name);
 
   if (tripDestinations.length <= MAX_DESTINATIONS) {
-    tripDestinations.join(` &mdash; `);
+    return tripDestinations.join(` &mdash; `);
   }
 
   return `${tripDestinations[0]} &mdash; … &mdash; ${tripDestinations[tripDestinations.length - 1]}`;

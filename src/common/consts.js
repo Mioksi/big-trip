@@ -7,7 +7,7 @@ export const SHAKE_ANIMATION_TIMEOUT = 600;
 export const EVENT_TYPES_TO = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
 export const EVENT_TYPES_IN = [`check-in`, `sightseeing`, `restaurant`];
 
-export const AUTHORIZATION = `Basic 9fPr34w7FT3pn7hXTiPj8`;
+export const AUTHORIZATION = `Basic TcXXt3rPCmA2zRnAqg8v7`;
 export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 const STORE_PREFIX = `bigtrip-localstorage`;
@@ -96,7 +96,6 @@ export const FilterType = {
 
 export const FormatDate = {
   DEFAULT: `d/m/y H:i`,
-  ISO: `Z`,
   MOMENT_TIME: `HH:mm`,
   MOMENT_DATE: `DD/MM/YY`,
   MOMENT_ISO: `YYYY-MM-DDTHH:mm`,

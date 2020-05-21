@@ -12,8 +12,16 @@ import {encode} from "he";
 import "flatpickr/dist/flatpickr.min.css";
 
 const createEventEdit = (event, mode, options = {}) => {
-  const {price: notSanitizedPrice, isFavorite} = event;
-  const {type, offers, destination, allDestinations, offersByType, externalData} = options;
+  const {
+    type,
+    offers,
+    price: notSanitizedPrice,
+    destination,
+    allDestinations,
+    offersByType,
+    isFavorite,
+    externalData
+  } = options;
   const {name: notSanitizedCity, description, pictures} = destination;
   const {start, end, startFullDate, endFullDate} = getEventInfo(event);
 
@@ -59,6 +67,7 @@ const createEventEdit = (event, mode, options = {}) => {
             name="event-destination"
             value="${name}"
             list="destination-list-1"
+            required
           >
           <datalist id="destination-list-1">
             ${createOptions(allDestinations)}
@@ -114,6 +123,8 @@ export default class EventEdit extends AbstractSmartComponent {
     this._eventDestination = this._event.destination;
     this._startDate = this._event.startTime;
     this._endDate = this._event.endTime;
+    this._eventPrice = this._event.price;
+    this._isFavorite = this._event.isFavorite;
     this._externalData = buttonText;
 
     this._allOffers = offers;
@@ -147,6 +158,8 @@ export default class EventEdit extends AbstractSmartComponent {
       offersByType: this._offersByType,
       destination: this._eventDestination,
       allDestinations: this._allDestinations,
+      price: this._eventPrice,
+      isFavorite: this._isFavorite,
       externalData: this._externalData,
     });
   }
@@ -176,7 +189,12 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._eventType = event.type;
     this._eventOffers = event.offers;
+    this._offersByType = getOffersByType(this._allOffers, this._eventType);
     this._eventDestination = event.destination;
+    this._startDate = event.startTime;
+    this._endDate = event.endTime;
+    this._eventPrice = event.price;
+    this._isFavorite = event.isFavorite;
 
     this.rerender();
   }
@@ -255,9 +273,7 @@ export default class EventEdit extends AbstractSmartComponent {
   _setFlatpickr(date) {
     return {
       'altInput': true,
-      'allowInput': true,
       'enableTime': true,
-      'dateFormat': FormatDate.ISO,
       'altFormat': FormatDate.DEFAULT,
       'time_24hr': true,
       'defaultDate': date || ``,
@@ -308,7 +324,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   _onPriceChange(evt) {
-    this._event.price = evt.target.value;
+    this._eventPrice = evt.target.value;
   }
 
   _onOffersChange(eventOffers) {
@@ -324,7 +340,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   _onFavoriteButtonClick() {
-    this._event.isFavorite = !this._event.isFavorite;
+    this._isFavorite = !this._isFavorite;
 
     this.rerender();
   }

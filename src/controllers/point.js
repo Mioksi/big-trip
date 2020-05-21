@@ -1,6 +1,7 @@
 import {ESC_KEY, Mode, emptyPoint, Place, SHAKE_ANIMATION_TIMEOUT} from '../common/consts';
 import {getOffersByType} from '../common/utils/helpers';
 import {render, replace, remove} from '../common/utils/render';
+import EventContainer from '../components/main/event/event-container';
 import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
 import PointModel from '../models/point';
@@ -55,6 +56,7 @@ export default class PointController {
 
     this._eventItemComponent = null;
     this._eventEditComponent = null;
+    this._eventContainer = new EventContainer();
 
     this._onFormEscPress = this._onFormEscPress.bind(this);
     this.shake = this.shake.bind(this);
@@ -106,6 +108,54 @@ export default class PointController {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
+  _renderEvent(oldEventEditComponent, oldEventItemComponent) {
+    if (oldEventEditComponent && oldEventItemComponent) {
+      replace(this._eventItemComponent, oldEventItemComponent);
+      replace(this._eventEditComponent, oldEventEditComponent);
+
+      this._replaceEditToEvent();
+    } else {
+      render(this._container, this._eventContainer);
+      render(this._eventContainer.getElement(), this._eventItemComponent);
+    }
+  }
+
+  _renderNewEvent(oldEventEditComponent, oldEventItemComponent) {
+    if (oldEventEditComponent && oldEventItemComponent) {
+      remove(oldEventItemComponent);
+      remove(oldEventEditComponent);
+    }
+
+    render(this._container, this._eventEditComponent, Place.AFTERBEGIN);
+
+    this._eventEditComponent.applyFlatpickr();
+
+    document.addEventListener(`keydown`, this._onFormEscPress);
+  }
+
+  _replaceEditToEvent() {
+    this._eventEditComponent.reset();
+
+    this._mode = Mode.DEFAULT;
+
+    if (document.contains(this._eventEditComponent.getElement())) {
+      replace(this._eventItemComponent, this._eventEditComponent);
+
+      this._eventEditComponent.destroyFlatpickr();
+    }
+
+    document.removeEventListener(`keydown`, this._onFormEscPress);
+  }
+
+  _replaceEventToEdit() {
+    this._onViewChange();
+    this._eventEditComponent.applyFlatpickr();
+
+    this._mode = Mode.EDIT;
+
+    replace(this._eventEditComponent, this._eventItemComponent);
+  }
+
   _addHandlers(event) {
     this._eventItemComponent.setRollupButtonClickHandler(() => {
       this._replaceEventToEdit();
@@ -148,53 +198,6 @@ export default class PointController {
     this._eventEditComponent.setRollupButtonHandler(() => {
       this._replaceEditToEvent();
     });
-  }
-
-  _renderEvent(oldEventEditComponent, oldEventItemComponent) {
-    if (oldEventEditComponent && oldEventItemComponent) {
-      replace(this._eventItemComponent, oldEventItemComponent);
-      replace(this._eventEditComponent, oldEventEditComponent);
-
-      this._replaceEditToEvent();
-    } else {
-      render(this._container, this._eventItemComponent);
-    }
-  }
-
-  _renderNewEvent(oldEventEditComponent, oldEventItemComponent) {
-    if (oldEventEditComponent && oldEventItemComponent) {
-      remove(oldEventItemComponent);
-      remove(oldEventEditComponent);
-    }
-
-    render(this._container, this._eventEditComponent, Place.AFTERBEGIN);
-
-    this._eventEditComponent.applyFlatpickr();
-
-    document.addEventListener(`keydown`, this._onFormEscPress);
-  }
-
-  _replaceEditToEvent() {
-    this._eventEditComponent.reset();
-
-    this._mode = Mode.DEFAULT;
-
-    if (document.contains(this._eventEditComponent.getElement())) {
-      replace(this._eventItemComponent, this._eventEditComponent);
-
-      this._eventEditComponent.destroyFlatpickr();
-    }
-
-    document.removeEventListener(`keydown`, this._onFormEscPress);
-  }
-
-  _replaceEventToEdit() {
-    this._onViewChange();
-    this._eventEditComponent.applyFlatpickr();
-
-    this._mode = Mode.EDIT;
-
-    replace(this._eventEditComponent, this._eventItemComponent);
   }
 
   _onFormEscPress(evt) {
