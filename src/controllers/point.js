@@ -141,8 +141,6 @@ export default class PointController {
 
     if (document.contains(this._eventEditComponent.getElement())) {
       replace(this._eventItemComponent, this._eventEditComponent);
-
-      this._eventEditComponent.destroyFlatpickr();
     }
 
     document.removeEventListener(`keydown`, this._onFormEscPress);
