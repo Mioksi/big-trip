@@ -116,7 +116,6 @@ export default class TripController {
     this._creatingPoint = new PointController(dayList, this._onDataChange, this._onViewChange, destinations, offers);
 
     this._creatingPoint.render(emptyPoint, Mode.ADDING);
-    this._pointControllers = this._pointControllers.concat(this._creatingPoint);
   }
 
   _setDefaultSort() {

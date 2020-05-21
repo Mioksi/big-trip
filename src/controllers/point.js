@@ -59,6 +59,7 @@ export default class PointController {
     this._eventContainer = new EventContainer();
 
     this._onFormEscPress = this._onFormEscPress.bind(this);
+    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
     this.shake = this.shake.bind(this);
   }
 
@@ -156,14 +157,14 @@ export default class PointController {
     replace(this._eventEditComponent, this._eventItemComponent);
   }
 
-  _addHandlers(event) {
-    this._eventItemComponent.setRollupButtonClickHandler(() => {
-      this._replaceEventToEdit();
+  _onRollupButtonClick() {
+    this._replaceEventToEdit();
 
-      document.addEventListener(`keydown`, this._onFormEscPress);
-    });
+    document.addEventListener(`keydown`, this._onFormEscPress);
+  }
 
-    this._eventEditComponent.setSubmitHandler((evt) => {
+  _onFormSubmit(event) {
+    return (evt) => {
       evt.preventDefault();
 
       const formData = this._eventEditComponent.getData();
@@ -177,9 +178,11 @@ export default class PointController {
       this._eventEditComponent.disableForm();
 
       this._onDataChange(this, event, data);
-    });
+    };
+  }
 
-    this._eventEditComponent.setDeleteButtonClickHandler(() => {
+  _onDeleteButtonClick(event) {
+    return () => {
       this._eventEditComponent.setData({
         deleteButtonText: `Deleting...`,
       });
@@ -187,17 +190,23 @@ export default class PointController {
       this._eventEditComponent.disableForm();
 
       this._onDataChange(this, event, null);
-    });
+    };
+  }
 
-    this._eventEditComponent.setFavoriteButtonHandler(() => {
+  _onFavoriteButtonClick(event) {
+    return () => {
       const newPoint = PointModel.clone(event);
 
       newPoint.isFavorite = !newPoint.isFavorite;
-    });
+    };
+  }
 
-    this._eventEditComponent.setRollupButtonHandler(() => {
-      this._replaceEditToEvent();
-    });
+  _addHandlers(event) {
+    this._eventItemComponent.setRollupButtonClickHandler(this._onRollupButtonClick);
+    this._eventEditComponent.setSubmitHandler(this._onFormSubmit(event));
+    this._eventEditComponent.setDeleteButtonClickHandler(this._onDeleteButtonClick(event));
+    this._eventEditComponent.setFavoriteButtonHandler(this._onFavoriteButtonClick(event));
+    this._eventEditComponent.setRollupButtonHandler(() => this._replaceEditToEvent());
   }
 
   _onFormEscPress(evt) {
