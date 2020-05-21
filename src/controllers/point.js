@@ -57,6 +57,7 @@ export default class PointController {
     this._eventEditComponent = null;
 
     this._onFormEscPress = this._onFormEscPress.bind(this);
+    this.shake = this.shake.bind(this);
   }
 
   render(event, mode) {

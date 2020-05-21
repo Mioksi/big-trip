@@ -6,7 +6,7 @@ import MenuComponent from './components/header/menu/menu';
 import PointsModel from './models/points';
 import StatisticsComponent from './components/header/statistics/statistics';
 import TripController from './controllers/trip';
-import TripInfoComponent from './components/header/trip-info/trip-info';
+import TripInfoController from './controllers/trip-info';
 import LoadingEventsComponent from './components/main/event/loading-events';
 import {AUTHORIZATION, END_POINT, STORE_NAME, Place, MenuItem} from './common/consts';
 import {render, remove} from './common/utils/render';
@@ -28,6 +28,7 @@ const loadingEvents = new LoadingEventsComponent();
 const menuComponent = new MenuComponent();
 const statisticsComponent = new StatisticsComponent(pointsModel);
 const tripController = new TripController(tripEvents, eventAddButton, pointsModel, apiWithProvider);
+const tripInfoController = new TripInfoController(tripMain, pointsModel);
 const filterController = new FilterController(secondTitle, pointsModel);
 
 const showTable = () => {
@@ -59,11 +60,11 @@ const loadData = (points, offers, destinations) => {
   pointsModel.setOffers(offers);
   pointsModel.setDestinations(destinations);
   remove(loadingEvents);
-  render(tripMain, new TripInfoComponent(points), Place.AFTERBEGIN);
   tripController.render();
 };
 
 const init = () => {
+  tripInfoController.render();
   render(firstTitle, menuComponent, Place.AFTEREND);
   filterController.render();
   render(tripEvents, loadingEvents);

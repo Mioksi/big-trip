@@ -11,7 +11,7 @@ export const castTimeFormat = (value) => value < MAX_HOURS ? `0${value}` : Strin
 
 const getDefaultSortedEvent = (first, second) => first.startTime - second.startTime;
 
-export const getDefaultSortedEvents = (events) => events.sort(getDefaultSortedEvent);
+export const getDefaultSortedEvents = (events) => events.slice().sort(getDefaultSortedEvent);
 
 export const getOffersByType = (offers, type) => {
   const index = offers.findIndex((offer) => offer.type === type);
