@@ -1,4 +1,4 @@
-import {SortType, Mode, emptyPoint} from '../common/consts';
+import {HIDDEN_CLASS, SortType, Mode, emptyPoint} from '../common/consts';
 import {render, remove} from '../common/utils/render';
 import {getDefaultSortedEvents} from '../common/utils/helpers';
 import {getTripDays} from '../components/main/day/utils/utils';
@@ -69,13 +69,11 @@ export default class TripController {
   }
 
   hide() {
-    this._sortComponent.hide();
-    this._dayListComponent.hide();
+    this._container.classList.add(HIDDEN_CLASS);
   }
 
   show() {
-    this._sortComponent.show();
-    this._dayListComponent.show();
+    this._container.classList.remove(HIDDEN_CLASS);
   }
 
   render() {
@@ -116,6 +114,15 @@ export default class TripController {
     this._creatingPoint = new PointController(dayList, this._onDataChange, this._onViewChange, destinations, offers);
 
     this._creatingPoint.render(emptyPoint, Mode.ADDING);
+  }
+
+  updateEvents() {
+    const dayList = this._dayListComponent.getElement();
+
+    dayList.innerHTML = ``;
+
+    this._removeEvents();
+    this._renderEventsByDays(this._pointsModel.getPoints(), dayList);
   }
 
   _setDefaultSort() {
@@ -172,28 +179,19 @@ export default class TripController {
     this._pointControllers = renderEvents(tripEventsList, sortedEvents, this._onDataChange, this._onViewChange, destinations, offers);
   }
 
-  _updateEvents() {
-    const dayList = this._dayListComponent.getElement();
-
-    dayList.innerHTML = ``;
-
-    this._removeEvents();
-    this._renderEventsByDays(this._pointsModel.getPoints(), dayList);
-  }
-
   _onDataChange(pointController, oldData, newData) {
     if (oldData.id === emptyPoint.id) {
       this._creatingPoint = null;
       this._eventAddButton.removeAttribute(`disabled`);
+      pointController.destroy();
 
       if (newData === null) {
-        pointController.destroy();
-        this._updateEvents();
+        this.updateEvents();
       } else {
         this._api.createPoint(newData)
           .then((pointModel) => {
             this._pointsModel.addPoint(pointModel);
-            this._updateEvents();
+            this.updateEvents();
             this._eventAddButton.removeAttribute(`disabled`);
           })
           .catch(pointController.shake);
@@ -202,7 +200,7 @@ export default class TripController {
       this._api.deletePoint(oldData.id)
         .then(() => {
           this._pointsModel.removePoint(oldData.id);
-          this._updateEvents();
+          this.updateEvents();
 
           if (!this._pointsModel.getPointsAll().length) {
             render(this._container, this._noEventsComponent);
@@ -216,7 +214,7 @@ export default class TripController {
 
           if (isSuccess) {
             pointController.render(pointModel, Mode.DEFAULT);
-            this._updateEvents();
+            this.updateEvents();
           }
         })
         .catch(pointController.shake);
@@ -224,6 +222,12 @@ export default class TripController {
   }
 
   _onViewChange() {
+    if (this._creatingPoint) {
+      this._creatingPoint.destroy();
+      this._creatingPoint = null;
+      this._eventAddButton.removeAttribute(`disabled`);
+    }
+
     this._pointControllers.forEach((it) => it.setDefaultView());
   }
 
@@ -242,6 +246,6 @@ export default class TripController {
 
   _onFilterChange() {
     this._setDefaultSort();
-    this._updateEvents();
+    this.updateEvents();
   }
 }

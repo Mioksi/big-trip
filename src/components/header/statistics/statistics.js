@@ -49,7 +49,9 @@ const getChartConfig = (title, types, data, formatter) => {
         data,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        minBarLength: ChartParameter.MIN_BAR_LENGTH,
+        barThickness: ChartParameter.BAR_THICKNESS
       }]
     },
     options: {
@@ -84,8 +86,7 @@ const getChartConfig = (title, types, data, formatter) => {
           gridLines: {
             display: false,
             drawBorder: false
-          },
-          barThickness: ChartParameter.BAR_THICKNESS,
+          }
         }],
         xAxes: [{
           ticks: {
@@ -95,8 +96,7 @@ const getChartConfig = (title, types, data, formatter) => {
           gridLines: {
             display: false,
             drawBorder: false
-          },
-          minBarLength: ChartParameter.MIN_BAR_LENGTH
+          }
         }],
       },
       legend: {
@@ -191,7 +191,7 @@ export default class Statistics extends AbstractSmartComponent {
 
   _renderCharts() {
     const element = this.getElement();
-    const points = this._points.getPoints();
+    const points = this._points.getPointsAll();
 
     const moneyCtx = element.querySelector(`.statistics__chart--money`);
     const transportCtx = element.querySelector(`.statistics__chart--transport`);

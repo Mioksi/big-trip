@@ -1,6 +1,8 @@
 import {FormatDate, MAX_HOURS} from '../consts';
 import moment from "moment";
 
+export const formatFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+
 export const formatTime = (date) => moment(date).format(FormatDate.MOMENT_TIME);
 export const formatDate = (date) => moment(date).format(FormatDate.MOMENT_DATE);
 export const formatMonth = (date) => moment(date).format(FormatDate.MOMENT_MONTH);

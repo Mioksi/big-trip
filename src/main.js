@@ -3,6 +3,7 @@ import Provider from "./api/provider.js";
 import Store from './api/store';
 import FilterController from './controllers/filter';
 import MenuComponent from './components/header/menu/menu';
+import PointModel from './models/point';
 import PointsModel from './models/points';
 import StatisticsComponent from './components/header/statistics/statistics';
 import TripController from './controllers/trip';
@@ -69,7 +70,7 @@ const init = () => {
   filterController.render();
   render(tripEvents, loadingEvents);
 
-  render(tripEvents, statisticsComponent);
+  render(tripEvents, statisticsComponent, Place.AFTEREND);
   statisticsComponent.hide();
 
   menuComponent.setMenuItemChangeHandler((menuItem) => menuTab[menuItem]());
@@ -80,13 +81,20 @@ const init = () => {
     .then(([points, offers, destinations]) => loadData(points, offers, destinations));
 
   window.addEventListener(`load`, () => {
-    navigator.serviceWorker.register(`/sw.js`);
+    navigator.serviceWorker.register(`./sw.js`);
   });
 
   window.addEventListener(`online`, () => {
     document.title = document.title.replace(` [offline]`, ``);
 
-    apiWithProvider.sync();
+    apiWithProvider.sync()
+      .then((events) => {
+        pointsModel.setPoints(PointModel.parsePoints(Object.values(events)));
+        tripController.updateEvents();
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
   });
 
   window.addEventListener(`offline`, () => {

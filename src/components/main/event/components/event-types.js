@@ -1,3 +1,5 @@
+import {formatFirstLetter} from '../../../../common/utils/helpers';
+
 const getCheckedInput = (isChecked) => isChecked ? `checked` : ``;
 
 const createTransferItem = (type, index, isChecked) => {
@@ -9,7 +11,7 @@ const createTransferItem = (type, index, isChecked) => {
         value="${type}"
         ${getCheckedInput(isChecked)}
       >
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${index}">${type}</label>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${index}">${formatFirstLetter(type)}</label>
     </div>`
   );
 };
@@ -27,7 +29,7 @@ const createActivityItem = (type, index, isChecked) => {
         value="${type}"
         ${getCheckedInput(isChecked)}
       >
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${index}">${type}</label>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${index}">${formatFirstLetter(type)}</label>
     </div>`
   );
 };

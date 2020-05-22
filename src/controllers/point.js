@@ -27,7 +27,7 @@ const parseFormData = (formData, id, destinations, offers) => {
     type,
     'date_from': startTime ? new Date(startTime) : null,
     'date_to': endTime ? new Date(endTime) : null,
-    'base_price': parseInt(encode(formData.get(`event-price`)), 10),
+    'base_price': Number(encode(formData.get(`event-price`))),
     'destination': {
       'name': destination.name,
       'description': destination.description,
@@ -127,7 +127,7 @@ export default class PointController {
       remove(oldEventEditComponent);
     }
 
-    render(this._container, this._eventEditComponent, Place.AFTERBEGIN);
+    render(this._container, this._eventEditComponent, Place.BEFOREBEGIN);
 
     this._eventEditComponent.applyFlatpickr();
 

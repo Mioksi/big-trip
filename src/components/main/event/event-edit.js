@@ -147,6 +147,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._onPriceChange = this._onPriceChange.bind(this);
     this._onOffersChange = this._onOffersChange.bind(this);
     this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
+    this._onCloseDate = this._onCloseDate.bind(this);
 
     this._subscribeOnEvents();
   }
@@ -271,6 +272,10 @@ export default class EventEdit extends AbstractSmartComponent {
     this._flatpickrEndTime = this._getFlatpickrEndTime(endTimeInput, this._endDate);
   }
 
+  _onCloseDate(selectedDates, dateStr) {
+    this._flatpickrEndTime.set(`minDate`, dateStr);
+  }
+
   _setFlatpickr(date) {
     return {
       'altInput': true,
@@ -282,11 +287,11 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   _getFlatpickrStartTime(timeInput, date) {
-    return flatpickr(timeInput, Object.assign({}, {minDate: date}, this._setFlatpickr(date)));
+    return flatpickr(timeInput, Object.assign({}, {onClose: this._onCloseDate}, this._setFlatpickr(date)));
   }
 
   _getFlatpickrEndTime(timeInput, date) {
-    return flatpickr(timeInput, Object.assign({}, {minDate: this._startDate}, this._setFlatpickr(date)));
+    return flatpickr(timeInput, this._setFlatpickr(date));
   }
 
   _onEventTypeChange(evt) {
@@ -324,8 +329,18 @@ export default class EventEdit extends AbstractSmartComponent {
     this._endDate = evt.target.value;
   }
 
-  _onPriceChange(evt) {
-    this._eventPrice = evt.target.value;
+  _onPriceChange(input) {
+    return (evt) => {
+      const inputPrice = evt.target.value;
+
+      if (inputPrice.match(/\D+/)) {
+        input.setCustomValidity(`Please input numbers only`);
+      } else {
+        input.setCustomValidity(``);
+      }
+
+      this._eventPrice = inputPrice;
+    };
   }
 
   _onOffersChange(eventOffers) {
@@ -336,14 +351,12 @@ export default class EventEdit extends AbstractSmartComponent {
       const checkedOffers = [...eventOffers.querySelectorAll(`input`)].filter((input) => input.checked);
       const checkedOffersValue = [...checkedOffers].map((offer) => offer.value);
 
-      this._eventOffers = this._offersByType.filter((offer) => checkedOffersValue.includes(offer.title));
+      this._offersByType = this._offersByType.filter((offer) => checkedOffersValue.includes(offer.title));
     };
   }
 
   _onFavoriteButtonClick() {
     this._isFavorite = !this._isFavorite;
-
-    this.rerender();
   }
 
   _subscribeOnEvents() {
@@ -361,7 +374,7 @@ export default class EventEdit extends AbstractSmartComponent {
     eventDestination.addEventListener(`change`, this._onDestinationChange(eventDestination));
     startTimeInput.addEventListener(`change`, this._onStartDateChange);
     endTimeInput.addEventListener(`change`, this._onEndDateChange);
-    eventPrice.addEventListener(`input`, this._onPriceChange);
+    eventPrice.addEventListener(`input`, this._onPriceChange(eventPrice));
 
     if (eventOffers) {
       eventOffers.addEventListener(`change`, this._onOffersChange(eventOffers));
