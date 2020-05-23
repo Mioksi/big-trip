@@ -190,7 +190,6 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._eventType = event.type;
     this._eventOffers = event.offers;
-    this._offersByType = getOffersByType(this._allOffers, this._eventType);
     this._eventDestination = event.destination;
     this._startDate = event.startTime;
     this._endDate = event.endTime;
@@ -291,7 +290,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   _getFlatpickrEndTime(timeInput, date) {
-    return flatpickr(timeInput, this._setFlatpickr(date));
+    return flatpickr(timeInput, Object.assign({}, {minDate: this._startDate}, this._setFlatpickr(date)));
   }
 
   _onEventTypeChange(evt) {
@@ -351,7 +350,7 @@ export default class EventEdit extends AbstractSmartComponent {
       const checkedOffers = [...eventOffers.querySelectorAll(`input`)].filter((input) => input.checked);
       const checkedOffersValue = [...checkedOffers].map((offer) => offer.value);
 
-      this._offersByType = this._offersByType.filter((offer) => checkedOffersValue.includes(offer.title));
+      this._eventOffers = this._offersByType.filter((offer) => checkedOffersValue.includes(offer.title));
     };
   }
 

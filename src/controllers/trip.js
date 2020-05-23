@@ -232,7 +232,7 @@ export default class TripController {
   }
 
   _onSortTypeChange(sortType) {
-    const sortedEvents = getSortedEvents(this._pointsModel.getPointsAll(), sortType);
+    const sortedEvents = getSortedEvents(this._pointsModel.getPoints(), sortType);
     const dayList = this._dayListComponent.getElement();
 
     dayList.innerHTML = ``;
