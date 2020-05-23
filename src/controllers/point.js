@@ -1,6 +1,7 @@
 import {ESC_KEY, Mode, emptyPoint, Place, SHAKE_ANIMATION_TIMEOUT} from '../common/consts';
 import {getOffersByType} from '../common/utils/helpers';
 import {render, replace, remove} from '../common/utils/render';
+import EventContainer from '../components/main/event/event-container';
 import EventItemComponent from '../components/main/event/event-item';
 import EventEditComponent from '../components/main/event/event-edit';
 import PointModel from '../models/point';
@@ -26,7 +27,7 @@ const parseFormData = (formData, id, destinations, offers) => {
     type,
     'date_from': startTime ? new Date(startTime) : null,
     'date_to': endTime ? new Date(endTime) : null,
-    'base_price': parseInt(encode(formData.get(`event-price`)), 10),
+    'base_price': Number(encode(formData.get(`event-price`))),
     'destination': {
       'name': destination.name,
       'description': destination.description,
@@ -55,8 +56,11 @@ export default class PointController {
 
     this._eventItemComponent = null;
     this._eventEditComponent = null;
+    this._eventContainer = new EventContainer();
 
     this._onFormEscPress = this._onFormEscPress.bind(this);
+    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
+    this.shake = this.shake.bind(this);
   }
 
   render(event, mode) {
@@ -105,50 +109,6 @@ export default class PointController {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
-  _addHandlers(event) {
-    this._eventItemComponent.setRollupButtonClickHandler(() => {
-      this._replaceEventToEdit();
-
-      document.addEventListener(`keydown`, this._onFormEscPress);
-    });
-
-    this._eventEditComponent.setSubmitHandler((evt) => {
-      evt.preventDefault();
-
-      const formData = this._eventEditComponent.getData();
-      const data = parseFormData(formData, event.id, this._destinations, this._offers);
-
-      this._eventEditComponent.setData({
-        saveButtonText: `Saving...`,
-      });
-
-      this._eventEditComponent.destroyFlatpickr();
-      this._eventEditComponent.disableForm();
-
-      this._onDataChange(this, event, data);
-    });
-
-    this._eventEditComponent.setDeleteButtonClickHandler(() => {
-      this._eventEditComponent.setData({
-        deleteButtonText: `Deleting...`,
-      });
-
-      this._eventEditComponent.disableForm();
-
-      this._onDataChange(this, event, null);
-    });
-
-    this._eventEditComponent.setFavoriteButtonHandler(() => {
-      const newPoint = PointModel.clone(event);
-
-      newPoint.isFavorite = !newPoint.isFavorite;
-    });
-
-    this._eventEditComponent.setRollupButtonHandler(() => {
-      this._replaceEditToEvent();
-    });
-  }
-
   _renderEvent(oldEventEditComponent, oldEventItemComponent) {
     if (oldEventEditComponent && oldEventItemComponent) {
       replace(this._eventItemComponent, oldEventItemComponent);
@@ -156,7 +116,8 @@ export default class PointController {
 
       this._replaceEditToEvent();
     } else {
-      render(this._container, this._eventItemComponent);
+      render(this._container, this._eventContainer);
+      render(this._eventContainer.getElement(), this._eventItemComponent);
     }
   }
 
@@ -166,7 +127,7 @@ export default class PointController {
       remove(oldEventEditComponent);
     }
 
-    render(this._container, this._eventEditComponent, Place.AFTERBEGIN);
+    render(this._container, this._eventEditComponent, Place.BEFOREBEGIN);
 
     this._eventEditComponent.applyFlatpickr();
 
@@ -180,8 +141,6 @@ export default class PointController {
 
     if (document.contains(this._eventEditComponent.getElement())) {
       replace(this._eventItemComponent, this._eventEditComponent);
-
-      this._eventEditComponent.destroyFlatpickr();
     }
 
     document.removeEventListener(`keydown`, this._onFormEscPress);
@@ -194,6 +153,58 @@ export default class PointController {
     this._mode = Mode.EDIT;
 
     replace(this._eventEditComponent, this._eventItemComponent);
+  }
+
+  _onRollupButtonClick() {
+    this._replaceEventToEdit();
+
+    document.addEventListener(`keydown`, this._onFormEscPress);
+  }
+
+  _onFormSubmit(event) {
+    return (evt) => {
+      evt.preventDefault();
+
+      const formData = this._eventEditComponent.getData();
+      const data = parseFormData(formData, event.id, this._destinations, this._offers);
+
+      this._eventEditComponent.setData({
+        saveButtonText: `Saving...`,
+      });
+
+      this._eventEditComponent.destroyFlatpickr();
+      this._eventEditComponent.disableForm();
+
+      this._onDataChange(this, event, data);
+    };
+  }
+
+  _onDeleteButtonClick(event) {
+    return () => {
+      this._eventEditComponent.setData({
+        deleteButtonText: `Deleting...`,
+      });
+
+      this._eventEditComponent.disableForm();
+
+      this._onDataChange(this, event, null);
+    };
+  }
+
+  _onFavoriteButtonClick(event) {
+    return () => {
+      const newPoint = PointModel.clone(event);
+
+      newPoint.isFavorite = !newPoint.isFavorite;
+    };
+  }
+
+  _addHandlers(event) {
+    this._eventItemComponent.setRollupButtonClickHandler(this._onRollupButtonClick);
+    this._eventEditComponent.setSubmitHandler(this._onFormSubmit(event));
+    this._eventEditComponent.setDeleteButtonClickHandler(this._onDeleteButtonClick(event));
+    this._eventEditComponent.setFavoriteButtonHandler(this._onFavoriteButtonClick(event));
+    this._eventEditComponent.setRollupButtonHandler(() => this._replaceEditToEvent());
   }
 
   _onFormEscPress(evt) {

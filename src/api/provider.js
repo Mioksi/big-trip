@@ -134,12 +134,14 @@ export default class Provider {
   }
 
   _syncPoints(response) {
-    const createdPoints = getSyncedPoints(response.created);
+    const createdPoints = response.created;
     const updatedPoints = getSyncedPoints(response.updated);
 
     const items = createStoreStructure([...createdPoints, ...updatedPoints]);
 
     this._store.setItems(items);
+
+    return Promise.resolve(items);
   }
 
   _isOnline() {

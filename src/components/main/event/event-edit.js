@@ -12,8 +12,16 @@ import {encode} from "he";
 import "flatpickr/dist/flatpickr.min.css";
 
 const createEventEdit = (event, mode, options = {}) => {
-  const {price: notSanitizedPrice, isFavorite} = event;
-  const {type, offers, destination, allDestinations, offersByType, externalData} = options;
+  const {
+    type,
+    offers,
+    price: notSanitizedPrice,
+    destination,
+    allDestinations,
+    offersByType,
+    isFavorite,
+    externalData
+  } = options;
   const {name: notSanitizedCity, description, pictures} = destination;
   const {start, end, startFullDate, endFullDate} = getEventInfo(event);
 
@@ -59,6 +67,7 @@ const createEventEdit = (event, mode, options = {}) => {
             name="event-destination"
             value="${name}"
             list="destination-list-1"
+            required
           >
           <datalist id="destination-list-1">
             ${createOptions(allDestinations)}
@@ -114,6 +123,8 @@ export default class EventEdit extends AbstractSmartComponent {
     this._eventDestination = this._event.destination;
     this._startDate = this._event.startTime;
     this._endDate = this._event.endTime;
+    this._eventPrice = this._event.price;
+    this._isFavorite = this._event.isFavorite;
     this._externalData = buttonText;
 
     this._allOffers = offers;
@@ -147,6 +158,8 @@ export default class EventEdit extends AbstractSmartComponent {
       offersByType: this._offersByType,
       destination: this._eventDestination,
       allDestinations: this._allDestinations,
+      price: this._eventPrice,
+      isFavorite: this._isFavorite,
       externalData: this._externalData,
     });
   }
@@ -176,9 +189,15 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._eventType = event.type;
     this._eventOffers = event.offers;
+    this._offersByType = getOffersByType(this._allOffers, this._eventType);
     this._eventDestination = event.destination;
+    this._startDate = event.startTime;
+    this._endDate = event.endTime;
+    this._eventPrice = event.price;
+    this._isFavorite = event.isFavorite;
 
     this.rerender();
+    this.destroyFlatpickr();
   }
 
   disableForm() {
@@ -252,30 +271,34 @@ export default class EventEdit extends AbstractSmartComponent {
     this._flatpickrEndTime = this._getFlatpickrEndTime(endTimeInput, this._endDate);
   }
 
-  _setFlatpickr(date) {
+  _setFlatpickr() {
     return {
       'altInput': true,
-      'allowInput': true,
       'enableTime': true,
-      'dateFormat': FormatDate.ISO,
       'altFormat': FormatDate.DEFAULT,
       'time_24hr': true,
-      'defaultDate': date || ``,
     };
   }
 
   _getFlatpickrStartTime(timeInput, date) {
-    return flatpickr(timeInput, Object.assign({}, {minDate: date}, this._setFlatpickr(date)));
+    return flatpickr(timeInput, Object.assign({}, {defaultDate: date}, this._setFlatpickr()));
   }
 
   _getFlatpickrEndTime(timeInput, date) {
-    return flatpickr(timeInput, Object.assign({}, {minDate: this._startDate}, this._setFlatpickr(date)));
+    return flatpickr(timeInput, Object.assign({}, {defaultDate: date, minDate: this._startDate}, this._setFlatpickr()));
+  }
+
+  _getFlatpickrUpdate(timeInput, date) {
+    const defaultDate = (this._endDate > date) ? this._endDate : date;
+
+    return flatpickr(timeInput, Object.assign({}, {defaultDate, minDate: date}, this._setFlatpickr()));
   }
 
   _onEventTypeChange(evt) {
     this._eventType = evt.target.value;
 
     this._offersByType = getOffersByType(this._allOffers, this._eventType);
+    this._eventOffers = [];
 
     this.rerender();
   }
@@ -299,16 +322,31 @@ export default class EventEdit extends AbstractSmartComponent {
     };
   }
 
-  _onStartDateChange(evt) {
-    this._startDate = evt.target.value;
+  _onStartDateChange(input) {
+    return (evt) => {
+      this._startDate = evt.target.value;
+      this._endDate = (this._endDate > this._startDate) ? this._endDate : this._startDate;
+
+      this._flatpickrEndTime = this._getFlatpickrUpdate(input, this._startDate);
+    };
   }
 
   _onEndDateChange(evt) {
     this._endDate = evt.target.value;
   }
 
-  _onPriceChange(evt) {
-    this._event.price = evt.target.value;
+  _onPriceChange(input) {
+    return (evt) => {
+      const inputPrice = evt.target.value;
+
+      if (inputPrice.match(/\D+/)) {
+        input.setCustomValidity(`Please input numbers only`);
+      } else {
+        input.setCustomValidity(``);
+      }
+
+      this._eventPrice = inputPrice;
+    };
   }
 
   _onOffersChange(eventOffers) {
@@ -324,9 +362,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   _onFavoriteButtonClick() {
-    this._event.isFavorite = !this._event.isFavorite;
-
-    this.rerender();
+    this._isFavorite = !this._isFavorite;
   }
 
   _subscribeOnEvents() {
@@ -342,9 +378,9 @@ export default class EventEdit extends AbstractSmartComponent {
 
     eventTypeList.addEventListener(`change`, this._onEventTypeChange);
     eventDestination.addEventListener(`change`, this._onDestinationChange(eventDestination));
-    startTimeInput.addEventListener(`change`, this._onStartDateChange);
+    startTimeInput.addEventListener(`change`, this._onStartDateChange(endTimeInput));
     endTimeInput.addEventListener(`change`, this._onEndDateChange);
-    eventPrice.addEventListener(`input`, this._onPriceChange);
+    eventPrice.addEventListener(`input`, this._onPriceChange(eventPrice));
 
     if (eventOffers) {
       eventOffers.addEventListener(`change`, this._onOffersChange(eventOffers));

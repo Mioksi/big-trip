@@ -24,6 +24,10 @@ export default class Points {
     return getPointsByFilter(this._points, this._activeFilterType);
   }
 
+  getPointsAll() {
+    return this._points;
+  }
+
   setDestinations(destinations) {
     this._destinations = destinations;
   }
@@ -56,6 +60,8 @@ export default class Points {
 
     this._points = [].concat(this._points.slice(0, index), point, this._points.slice(index + 1));
 
+    this._callHandlers(this._dataChangeHandlers);
+
     return true;
   }
 
@@ -68,11 +74,17 @@ export default class Points {
 
     this._points = [].concat(this._points.slice(0, index), this._points.slice(index + 1));
 
+    this._callHandlers(this._dataChangeHandlers);
+
     return true;
   }
 
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {

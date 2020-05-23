@@ -15,6 +15,9 @@ export const render = (container, component, place = Place.BEFOREEND) => {
     case Place.AFTERBEGIN:
       container.prepend(component.getElement());
       break;
+    case Place.BEFOREBEGIN:
+      container.before(component.getElement());
+      break;
     case Place.AFTEREND:
       container.after(component.getElement());
       break;
