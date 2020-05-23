@@ -189,6 +189,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._eventType = event.type;
     this._eventOffers = event.offers;
+    this._offersByType = getOffersByType(this._allOffers, this._eventType);
     this._eventDestination = event.destination;
     this._startDate = event.startTime;
     this._endDate = event.endTime;
@@ -297,7 +298,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._eventType = evt.target.value;
 
     this._offersByType = getOffersByType(this._allOffers, this._eventType);
-    this._eventOffers = this._event.offers;
+    this._eventOffers = [];
 
     this.rerender();
   }
