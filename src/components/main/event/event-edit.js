@@ -147,7 +147,6 @@ export default class EventEdit extends AbstractSmartComponent {
     this._onPriceChange = this._onPriceChange.bind(this);
     this._onOffersChange = this._onOffersChange.bind(this);
     this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
-    this._onCloseDate = this._onCloseDate.bind(this);
 
     this._subscribeOnEvents();
   }
@@ -271,26 +270,27 @@ export default class EventEdit extends AbstractSmartComponent {
     this._flatpickrEndTime = this._getFlatpickrEndTime(endTimeInput, this._endDate);
   }
 
-  _onCloseDate(selectedDates, dateStr) {
-    this._flatpickrEndTime.set(`minDate`, dateStr);
-  }
-
-  _setFlatpickr(date) {
+  _setFlatpickr() {
     return {
       'altInput': true,
       'enableTime': true,
       'altFormat': FormatDate.DEFAULT,
       'time_24hr': true,
-      'defaultDate': date || ``,
     };
   }
 
   _getFlatpickrStartTime(timeInput, date) {
-    return flatpickr(timeInput, Object.assign({}, {onClose: this._onCloseDate}, this._setFlatpickr(date)));
+    return flatpickr(timeInput, Object.assign({}, {defaultDate: date}, this._setFlatpickr()));
   }
 
   _getFlatpickrEndTime(timeInput, date) {
-    return flatpickr(timeInput, Object.assign({}, {minDate: this._startDate}, this._setFlatpickr(date)));
+    return flatpickr(timeInput, Object.assign({}, {defaultDate: date, minDate: this._startDate}, this._setFlatpickr()));
+  }
+
+  _getFlatpickrUpdate(timeInput, date) {
+    const defaultDate = (this._endDate > date) ? this._endDate : date;
+
+    return flatpickr(timeInput, Object.assign({}, {defaultDate, minDate: date}, this._setFlatpickr()));
   }
 
   _onEventTypeChange(evt) {
@@ -321,8 +321,13 @@ export default class EventEdit extends AbstractSmartComponent {
     };
   }
 
-  _onStartDateChange(evt) {
-    this._startDate = evt.target.value;
+  _onStartDateChange(input) {
+    return (evt) => {
+      this._startDate = evt.target.value;
+      this._endDate = (this._endDate > this._startDate) ? this._endDate : this._startDate;
+
+      this._flatpickrEndTime = this._getFlatpickrUpdate(input, this._startDate);
+    };
   }
 
   _onEndDateChange(evt) {
@@ -372,7 +377,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     eventTypeList.addEventListener(`change`, this._onEventTypeChange);
     eventDestination.addEventListener(`change`, this._onDestinationChange(eventDestination));
-    startTimeInput.addEventListener(`change`, this._onStartDateChange);
+    startTimeInput.addEventListener(`change`, this._onStartDateChange(endTimeInput));
     endTimeInput.addEventListener(`change`, this._onEndDateChange);
     eventPrice.addEventListener(`input`, this._onPriceChange(eventPrice));
 
