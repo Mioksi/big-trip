@@ -1,6 +1,5 @@
 import {HIDDEN_CLASS, SortType, Mode, emptyPoint} from '../common/consts';
 import {render, remove} from '../common/utils/render';
-import {getDefaultSortedEvents} from '../common/utils/helpers';
 import {getTripDays} from '../components/main/day/utils/utils';
 import DayItemComponent from '../components/main/day/day-item';
 import NoEventsComponent from '../components/main/event/no-events';
@@ -142,7 +141,7 @@ export default class TripController {
   }
 
   _renderEventsByDays(events, dayList) {
-    const sortedEvents = getDefaultSortedEvents(events);
+    const sortedEvents = events.slice().sort((first, second) => first.endTime - second.endTime);
     const allDays = getTripDays(sortedEvents);
     const destinations = this._pointsModel.getDestinations();
     const offers = this._pointsModel.getOffers();

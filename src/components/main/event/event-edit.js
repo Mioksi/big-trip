@@ -297,6 +297,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._eventType = evt.target.value;
 
     this._offersByType = getOffersByType(this._allOffers, this._eventType);
+    this._eventOffers = this._event.offers;
 
     this.rerender();
   }
