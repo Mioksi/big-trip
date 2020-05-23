@@ -4,9 +4,9 @@ import {Method, StatusCode, Url} from '../common/consts';
 const checkStatus = (response) => {
   if (response.status >= StatusCode.SUCCESS && response.status < StatusCode.REDIRECT) {
     return response;
-  } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
   }
+
+  throw new Error(`${response.status}: ${response.statusText}`);
 };
 
 const API = class {
